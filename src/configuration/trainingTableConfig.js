@@ -1,0 +1,22 @@
+module.exports = {
+  tableName: 'training',
+  columnNames: {
+    id: 'uuid',
+    reportDate: 'report_date',
+    name_of_trainee: 'name_of_trainee',
+    training: 'conduct_of_training',
+    region: 'region',
+    province: 'province',
+    district: 'district',
+    municipality: 'municipality',
+    barangay: 'barangay',
+    birthdate: 'birthdate',
+    age: 'age',
+    gender: 'gender',
+    ageGroup: 'age_group',
+    venue: 'venue',
+    startDate: 'start_date',
+    endDate: 'end_date',
+    remarks: 'remarks',
+  },
+};
