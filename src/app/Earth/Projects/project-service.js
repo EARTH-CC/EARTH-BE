@@ -16,7 +16,6 @@ class ProjectService {
 
       const newProject = await store.add(data);
 
-
       res
         .status(201)
         .json({ message: "Project added successfully",
