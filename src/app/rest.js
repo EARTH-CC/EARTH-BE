@@ -23,4 +23,7 @@ router.use(require("./tad/ndrrm/_rest"));
 router.use(require("./jobApplication/jobappform/_rest"));
 router.use(require("./jobApplication/jobpositions/_rest"));
 
+// EARTH
+router.use(require("./Earth/Projects/_rest"));
+
 module.exports = router;

@@ -10,7 +10,7 @@ const service = new Service();
 const router = express.Router();
 
 //Add / Import
-router.post("/project", db, uploadFile, asyncHandler(service.add));
+router.post("/project", db, asyncHandler(service.add));
 
 //Get
 router.get("/project/get/:uuid", auth, db, asyncHandler(service.get));

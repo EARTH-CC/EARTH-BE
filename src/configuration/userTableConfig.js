@@ -6,7 +6,7 @@ module.exports = {
       password: 'password',
       firstname: 'firstname',
       lastname: 'lastname',
-      region: 'region',
+      // region: 'region',
       role: 'role',
       refreshToken: 'refresh_token',
       status: 'status',

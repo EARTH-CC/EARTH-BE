@@ -1,138 +1,124 @@
 const { query } = require("express");
-const moment = require("moment-timezone");
-const nurseryTableConfig = require("../../../configuration/earthConfig/projectsTableConfig");
+const projectsTableConfig = require("../../../configuration/earthConfig/projectsTableConfig");
 
-class NurseryStore {
+class ProjectStore {
   constructor(db) {
     this.db = db;
     this.table = projectsTableConfig.tableName;
     this.cols = projectsTableConfig.columnNames;
   }
 
-  async add(row) {
-    return await this.db(this.table).insert({
-      report_date: row["Report Date"],
-      nurseries: row["Nurseries"],
-      funded_by: row["Funded by"],
-      region: row["Region"],
-      province: row["Province"],
-      district: row["District"],
-      municipality: row["Municipality"],
-      barangay: row["Barangay"],
-      birthdate: row["Birthdate"],
-      age: row["Age"],
-      name_of_cooperative_individual: row["Name of Cooperative/ Individual"],
-      gender: row["Gender"],
-      date_established: row["Date Established"],
-      area_in_hectares_ha: row["Area in Hectares (ha)"],
-      variety_used: row["Variety Used"],
-      period_of_moa: row["Period of MOA"],
-      remarks: row["Remarks"],
-      imported_by: row.imported_by, // Assign the import_by field from the row object
+  async add(data) {
+     return await this.db(this.table).insert({
+      start_date: data.start_date,
+      end_date: data.end_date,
+      project_name: data.project_name,
+      cost: data.cost,
+      added_by: data.added_by,
     });
   }
 
-  async update(uuid, body) {
-    // Perform the update operation
-    await this.db(this.table).where(this.cols.id, uuid).update({
-      report_date: body.report_date,
-      nurseries: body.nurseries,
-      funded_by: body.funded_by,
-      region: body.region,
-      province: body.province,
-      district: body.district,
-      municipality: body.municipality,
-      barangay: body.barangay,
-      birthdate: body.birthdate,
-      age: body.age,
-      name_of_cooperative_individual: body.name_of_cooperative_individual,
-      gender: body.gender,
-      date_established: body.date_established,
-      area_in_hectares_ha: body.area_in_hectares_ha,
-      variety_used: body.variety_used,
-      period_of_moa: body.period_of_moa,
-      remarks: body.remarks,
-    });
+  // // async update(uuid, body) {
+  // //   // Perform the update operation
+  // //   await this.db(this.table).where(this.cols.id, uuid).update({
+  // //     report_date: body.report_date,
+  // //     nurseries: body.nurseries,
+  // //     funded_by: body.funded_by,
+  // //     region: body.region,
+  // //     province: body.province,
+  // //     district: body.district,
+  // //     municipality: body.municipality,
+  // //     barangay: body.barangay,
+  // //     birthdate: body.birthdate,
+  // //     age: body.age,
+  // //     name_of_cooperative_individual: body.name_of_cooperative_individual,
+  // //     gender: body.gender,
+  // //     date_established: body.date_established,
+  // //     area_in_hectares_ha: body.area_in_hectares_ha,
+  // //     variety_used: body.variety_used,
+  // //     period_of_moa: body.period_of_moa,
+  // //     remarks: body.remarks,
+  // //   });
 
-    // Fetch the updated rows
-    const updatedRows = await this.db(this.table)
-      .where(this.cols.id, uuid)
-      .select("*")
-      .first();
+  //   // Fetch the updated rows
+  //   const updatedRows = await this.db(this.table)
+  //     .where(this.cols.id, uuid)
+  //     .select("*")
+  //     .first();
 
-    return updatedRows;
-  }
+  //   return updatedRows;
+  // }
 
-  async getExisting(row) {
-    const excludedFields = ["imported_by", "District", "Remarks"];
-    const query = this.db(this.table);
-    for (const [column, value] of Object.entries(row)) {
-      const columnName = column
-        .toLowerCase()
-        .replace(/ /g, "_")
-        .replace("/", "")
-        .replace("(", "")
-        .replace(")", "");
-      if (!excludedFields.includes(column)) {
-        query.where(columnName, value);
-      }
-    }
-    const existingRows = await query.select("*");
-    return existingRows.length > 0 ? existingRows : null;
-  }
+  // async getExisting(row) {
+  //   const excludedFields = ["imported_by", "District", "Remarks"];
+  //   const query = this.db(this.table);
+  //   for (const [column, value] of Object.entries(row)) {
+  //     const columnName = column
+  //       .toLowerCase()
+  //       .replace(/ /g, "_")
+  //       .replace("/", "")
+  //       .replace("(", "")
+  //       .replace(")", "");
+  //     if (!excludedFields.includes(column)) {
+  //       query.where(columnName, value);
+  //     }
+  //   }
+  //   const existingRows = await query.select("*");
+  //   return existingRows.length > 0 ? existingRows : null;
+  // }
 
-  async getByUUID(uuid) {
-    const results = await this.db(this.table)
-      .select()
-      .where(this.cols.id, uuid);
-    const convertedResults = convertDatesToTimezone(results, [
-      this.cols.reportDate,
-      this.cols.birthdate,
-      this.cols.establishedDate,
-    ]);
-    return convertedResults;
-  }
+  // async getByUUID(uuid) {
+  //   const results = await this.db(this.table)
+  //     .select()
+  //     .where(this.cols.id, uuid);
+  //   // const convertedResults = convertDatesToTimezone(results, [
+  //   //   this.cols.reportDate,
+  //   //   this.cols.birthdate,
+  //   //   this.cols.establishedDate,
+  //   // ]);
+  //   return results;
+  // }
 
-  async getAll() {
-    const results = await this.db(this.table)
-      .select()
-      .orderBy([
-        { column: this.cols.region },
-        { column: this.cols.reportDate, order: "desc" },
-      ]);
-    if (!results) {
-      return null;
-    }
-    const convertedResults = convertDatesToTimezone(results, [
-      this.cols.reportDate,
-      this.cols.birthdate,
-      this.cols.establishedDate,
-    ]);
-    const columnNames = await this.db(this.table)
-      .columnInfo()
-      .then((columns) => Object.keys(columns));
-    return results.length > 0 ? convertedResults : { columnNames };
-  }
+  // async getAll() {
+  //   const results = await this.db(this.table)
+  //     .select()
+  //     .orderBy([
+  //       { column: this.cols.region },
+  //       { column: this.cols.reportDate, order: "desc" },
+  //     ]);
+  //   if (!results) {
+  //     return null;
+  //   }
+  //   const convertedResults = convertDatesToTimezone(results, [
+  //     this.cols.reportDate,
+  //     this.cols.birthdate,
+  //     this.cols.establishedDate,
+  //   ]);
+  //   const columnNames = await this.db(this.table)
+  //     .columnInfo()
+  //     .then((columns) => Object.keys(columns));
+  //   return results.length > 0 ? convertedResults : { columnNames };
+  // }
 
-  async delete(uuid) {
-    const deletedRows = await this.db(this.table)
-      .where(this.cols.id, uuid)
-      .select("*")
-      .first();
-    await this.db(this.table).where(this.cols.id, uuid).del();
-    return deletedRows;
-  }
+  // async delete(uuid) {
+  //   const deletedRows = await this.db(this.table)
+  //     .where(this.cols.id, uuid)
+  //     .select("*")
+  //     .first();
+  //   await this.db(this.table).where(this.cols.id, uuid).del();
+  //   return deletedRows;
+  // }
 
-  async getMaxDate() {
-    const result = await this.db(this.table)
-      .max(`${this.cols.reportDate} as max_date`)
-      .first();
-    if (result.max_date === null) {
-      return null;
-    }
-    const convertedResults = convertDatesToTimezone([result], ["max_date"]);
-    return convertedResults[0].max_date;
-  }
+  // async getMaxDate() {
+  //   const result = await this.db(this.table)
+  //     .max(`${this.cols.reportDate} as max_date`)
+  //     .first();
+  //   if (result.max_date === null) {
+  //     return null;
+  //   }
+  //   const convertedResults = convertDatesToTimezone([result], ["max_date"]);
+  //   return convertedResults[0].max_date;
+  // }
 
   //   async getLineGraph(region, startDate, endDate, search) {
   //     const formattedStartDate = formatDate(startDate);
@@ -290,86 +276,86 @@ class NurseryStore {
   //     return formattedResult;
   //   }
 
-  async search(region, startDate, endDate, search) {
-    const formattedStartDate = formatDate(startDate);
-    const formattedEndDate = formatDate(endDate);
-    const maxDate = await this.getMaxDate();
-    const firstDate = firstDateOfMonth(maxDate);
-    const lastDate = lastDateOfMonth(maxDate);
-    const query = this.db(this.table)
-      .select()
-      .orderBy([
-        { column: this.cols.region },
-        { column: this.cols.reportDate, order: "desc" },
-      ]);
-    if (!maxDate) {
-      return [];
-    }
-    if (startDate && endDate) {
-      query.whereBetween(this.cols.reportDate, [
-        formattedStartDate,
-        formattedEndDate,
-      ]);
-    } else {
-      query.whereBetween(this.cols.reportDate, [firstDate, lastDate]);
-    }
-    if (region) {
-      query.where(this.cols.region, region);
-    }
-    if (search) {
-      const columns = await this.db(this.table).columnInfo();
-      query.andWhere((builder) => {
-        builder.where((innerBuilder) => {
-          Object.keys(columns).forEach((column) => {
-            innerBuilder.orWhere(column, "like", `%${search}%`);
-          });
-        });
-      });
-    }
-    const results = await query;
-    const convertedResults = convertDatesToTimezone(
-      results.map((row) => row),
-      [this.cols.reportDate, this.cols.birthdate, this.cols.establishedDate]
-    );
-    return convertedResults;
-  }
+  // async search(region, startDate, endDate, search) {
+  //   const formattedStartDate = formatDate(startDate);
+  //   const formattedEndDate = formatDate(endDate);
+  //   const maxDate = await this.getMaxDate();
+  //   const firstDate = firstDateOfMonth(maxDate);
+  //   const lastDate = lastDateOfMonth(maxDate);
+  //   const query = this.db(this.table)
+  //     .select()
+  //     .orderBy([
+  //       { column: this.cols.region },
+  //       { column: this.cols.reportDate, order: "desc" },
+  //     ]);
+  //   if (!maxDate) {
+  //     return [];
+  //   }
+  //   if (startDate && endDate) {
+  //     query.whereBetween(this.cols.reportDate, [
+  //       formattedStartDate,
+  //       formattedEndDate,
+  //     ]);
+  //   } else {
+  //     query.whereBetween(this.cols.reportDate, [firstDate, lastDate]);
+  //   }
+  //   if (region) {
+  //     query.where(this.cols.region, region);
+  //   }
+  //   if (search) {
+  //     const columns = await this.db(this.table).columnInfo();
+  //     query.andWhere((builder) => {
+  //       builder.where((innerBuilder) => {
+  //         Object.keys(columns).forEach((column) => {
+  //           innerBuilder.orWhere(column, "like", `%${search}%`);
+  //         });
+  //       });
+  //     });
+  //   }
+  //   const results = await query;
+  //   const convertedResults = convertDatesToTimezone(
+  //     results.map((row) => row),
+  //     [this.cols.reportDate, this.cols.birthdate, this.cols.establishedDate]
+  //   );
+  //   return convertedResults;
+  // }
 
-  async totalBeneficiary(region, startDate, endDate, search) {
-    const formattedStartDate = formatDate(startDate);
-    const formattedEndDate = formatDate(endDate);
-    const maxDate = await this.getMaxDate();
-    const firstDate = firstDateOfMonth(maxDate);
-    const lastDate = lastDateOfMonth(maxDate);
-    const result = await this.db(this.table)
-      .count(`${this.cols.coopName} AS count`)
-      .where((query) => {
-        if (!maxDate) {
-          query.whereRaw("false");
-        } else if (startDate && endDate) {
-          query.whereBetween(this.cols.reportDate, [
-            formattedStartDate,
-            formattedEndDate,
-          ]);
-        } else {
-          query.whereBetween(this.cols.reportDate, [firstDate, lastDate]);
-        }
+  // async totalBeneficiary(region, startDate, endDate, search) {
+  //   const formattedStartDate = formatDate(startDate);
+  //   const formattedEndDate = formatDate(endDate);
+  //   const maxDate = await this.getMaxDate();
+  //   const firstDate = firstDateOfMonth(maxDate);
+  //   const lastDate = lastDateOfMonth(maxDate);
+  //   const result = await this.db(this.table)
+  //     .count(`${this.cols.coopName} AS count`)
+  //     .where((query) => {
+  //       if (!maxDate) {
+  //         query.whereRaw("false");
+  //       } else if (startDate && endDate) {
+  //         query.whereBetween(this.cols.reportDate, [
+  //           formattedStartDate,
+  //           formattedEndDate,
+  //         ]);
+  //       } else {
+  //         query.whereBetween(this.cols.reportDate, [firstDate, lastDate]);
+  //       }
 
-        if (region) {
-          query.where(this.cols.region, region);
-        }
+  //       if (region) {
+  //         query.where(this.cols.region, region);
+  //       }
 
-        if (search) {
-          query.andWhere((builder) => {
-            Object.values(this.cols).forEach((column) => {
-              builder.orWhere(column, "like", `%${search}%`);
-            });
-          });
-        }
-      })
-      .first();
-    const count = result ? result.count : 0;
-    return count;
-  }
+  //       if (search) {
+  //         query.andWhere((builder) => {
+  //           Object.values(this.cols).forEach((column) => {
+  //             builder.orWhere(column, "like", `%${search}%`);
+  //           });
+  //         });
+  //       }
+  //     })
+  //     .first();
+  //   const count = result ? result.count : 0;
+  //   return count;
+  // }
 }
 
 // function formatDate(dateString) {
@@ -410,4 +396,4 @@ class NurseryStore {
 //   return lastDate;
 // }
 
-module.exports = NurseryStore;
+module.exports = ProjectStore;

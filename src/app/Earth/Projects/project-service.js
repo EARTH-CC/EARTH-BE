@@ -1,13 +1,6 @@
 const Store = require("./project-store");
 const Logs = require("../../logs/logs-store");
-// const XLSX = require("xlsx");
-// const { DateTime } = require("luxon");
-const {
-  NotFoundError,
-  //   BadRequestError,
-  //   FileUploadError,
-  //   errorHandler,
-} = require("../../../middlewares/errors");
+const { NotFoundError } = require("../../../middlewares/errors");
 const moduleName = "Projects";
 const userId = 1;
 
@@ -15,6 +8,25 @@ class ProjectService {
   constructor(store) {}
 
   // Add
+  async add(req, res, next) {
+    try {
+      const store = new Store(req.db);
+      const logs = new Logs(req.db);
+      const data = req.body;
+
+      const newProject = await store.add(data);
+
+
+      res
+        .status(201)
+        .json({ message: "Project added successfully",
+                uuid: userId,
+                module: moduleName, 
+                data: data });
+    } catch (err) {
+      next(err);
+    }
+  }
 
   // Get
   async get(req, res, next) {

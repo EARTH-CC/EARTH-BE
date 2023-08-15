@@ -2,9 +2,9 @@ module.exports = {
     tableName: 'projects',
     columnNames: {
       id: 'uuid',
-      nurseries: 'start_date',
-      reportDate: 'project_name',
-      fundedBy: 'end_Date',
-      region: 'cost',
+      startDate: 'start_date',
+      projectName: 'project_name',
+      endDate: 'end_Date',
+      cost: 'cost',
     },
   };

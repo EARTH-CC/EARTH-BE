@@ -17,7 +17,7 @@ class UserStore {
       password: hash,
       firstname: body.firstname,
       lastname: body.lastname,
-      region: body.region,
+      // region: body.region,
       role: body.role,
     });
   }
@@ -28,7 +28,7 @@ class UserStore {
       password: hash,
       firstname: body.firstname,
       lastname: body.lastname,
-      region: body.region,
+      // region: body.region,
       role: body.role,
       refresh_token: body.refresh_token,
       status: body.status,
@@ -41,7 +41,7 @@ class UserStore {
       password: body.password,
       firstname: body.firstname,
       lastname: body.lastname,
-      region: body.region,
+      // region: body.region,
       role: body.role,
       refresh_token: refreshtoken,
       status: body.status,
