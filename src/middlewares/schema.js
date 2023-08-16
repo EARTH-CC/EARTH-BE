@@ -22,7 +22,6 @@ const userDao =
             table.string("password").notNullable();
             table.string("firstname").notNullable();
             table.string("lastname").notNullable();
-            table.string("region").nullable();
             table.string("role").notNullable();
             table.string("refresh_token").nullable();
             table.integer("status").notNullable().defaultTo(1);
@@ -108,31 +107,40 @@ const userDao =
 
         await req.db("users").insert([
           {
-            username: "eglogistics",
+            username: "eg",
             password:
-              "$2b$10$.xSEIGgAGOv1NWMMQ1KSuev1/ccWK5sGiNu/5wGRQ5wBDEq8Mv86K",
+              "$2b$10$6Hq/7njiVUixrRytZmj.XuPsGqxvet.dAVhdYyIQsLINk/GuZBgee",
             firstname: "Mark",
             lastname: "Salem",
             // region: "all",
             role: "superadmin",
           },
           {
-            username: "hr",
+            username: "bontrade",
             password:
-              "$2b$10$ZEvsCQvjjbfkD.Zmwac/AegakD9cDVknJPTK5onPl/STsXtaKxYFG",
+              "$2b$10$zSsWH9rWGCTVsoA4hN4Gy.Rdn24uoqdYE2r1xFI3bm6m8xWBcdhz.",
             firstname: "PhilFIDA",
             lastname: "PhilFIDA",
             // region: "all",
-            role: "hradmin",
+            role: "bontrade",
           },
           {
-            username: "pictu",
+            username: "ugtrade",
             password:
-              "$2b$10$Kwfe69CG8eom.ueyw4DM3.1SxWwJsY8k7dpE53rhL8Txpq3hDprye",
+              "$2b$10$9IxuG4.xcu5mLUDryGLn9.vPRJs9HS.gbVEDf2yxrhGWTb0twajHK",
             firstname: "PhilFIDA",
             lastname: "PhilFIDA",
             // region: "all",
-            role: "pictu",
+            role: "ugtrade",
+          },
+          {
+            username: "erotas",
+            password:
+              "$2b$10$pTm5849Ep/tN1/ZGngiTbeu160uXoqbccV2zRW1zsxxlzEaYvXz3a",
+            firstname: "PhilFIDA",
+            lastname: "PhilFIDA",
+            // region: "all",
+            role: "erotas",
           },
         ]);
       } catch (error) {
