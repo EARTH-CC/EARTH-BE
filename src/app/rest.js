@@ -25,5 +25,6 @@ router.use(require("./jobApplication/jobpositions/_rest"));
 
 // EARTH
 router.use(require("./Earth/Projects/_rest"));
+router.use(require("./Earth/purchaseItems/_rest"));
 
 module.exports = router;

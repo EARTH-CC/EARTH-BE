@@ -1,19 +1,19 @@
 const { query } = require("express");
-const projectsTableConfig = require("../../../configuration/earthConfig/projectsTableConfig");
+const purchaseItemsTableConfig = require("../../../configuration/earthConfig/purchaseItemsTableConfig");
 
-class ProjectStore {
+class PurchaseStore {
   constructor(db) {
     this.db = db;
-    this.table = projectsTableConfig.tableName;
-    this.cols = projectsTableConfig.columnNames;
+    this.table = purchaseItemsTableConfig.tableName;
+    this.cols = purchaseItemsTableConfig.columnNames;
   }
 
   async add(data) {
     return await this.db(this.table).insert({
-      start_date: data.start_date,
-      end_date: data.end_date,
-      project_name: data.project_name,
-      cost: data.cost,
+      date: data.date,
+      item_name: data.item_name,
+      item_type: data.item_type,
+      description: data.description,
       added_by: data.added_by,
     });
   }
@@ -21,10 +21,10 @@ class ProjectStore {
   async update(uuid, body) {
     // Perform the update operation
     await this.db(this.table).where(this.cols.id, uuid).update({
-      start_date: body.start_date,
-      end_date: body.end_date,
-      project_name: body.project_name,
-      cost: body.cost,
+        date: body.date,
+        item_name: body.item_name,
+        item_type: body.item_type,
+        description: body.description,
       added_by: body.added_by,
     });
 
@@ -46,7 +46,7 @@ class ProjectStore {
   async getAll() {
     const results = await this.db(this.table)
       .select()
-      .orderBy([{ column: this.cols.startDate, order: "desc" }]);
+      .orderBy([{ column: this.cols.date, order: "desc" }]);
     if (!results) {
       return null;
     }
@@ -190,4 +190,4 @@ class ProjectStore {
 //   return lastDate;
 // }
 
-module.exports = ProjectStore;
+module.exports = PurchaseStore;

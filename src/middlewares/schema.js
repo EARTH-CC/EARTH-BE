@@ -71,6 +71,22 @@ const userDao =
               .onDelete("CASCADE");
           })
 
+          .createTable("purchase_items", (table) => {
+            table.increments("uuid").primary();
+            table.date("date").notNullable();
+            table.string("item_name").notNullable();
+            table.string("item_type").notNullable();
+            table.string("description").notNullable();
+            table.timestamps(true, true);
+            table
+              .integer("added_by")
+              .unsigned()
+              .notNullable()
+              .references("uuid") // Change this to "uuid" to match the primary key of "users" table
+              .inTable("users")
+              .onDelete("CASCADE");
+          })
+
           .createTable("logs", (table) => {
             table.increments("log_id").primary();
             table
@@ -94,6 +110,7 @@ const userDao =
                 "Abaca Disease Management Project",
                 "Job Positions",
                 "Projects",
+                "PurchaseItems",
               ])
               .notNullable();
             table.string("action").notNullable();
