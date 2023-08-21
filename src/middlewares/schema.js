@@ -85,6 +85,50 @@ const userDao =
               .references("uuid") // Change this to "uuid" to match the primary key of "users" table
               .inTable("users")
               .onDelete("CASCADE");
+
+            table.index("item_name");
+            table.index("item_type");
+            table.index("description");
+          })
+
+          .createTable("purchase_request", (table) => {
+            table.increments("uuid").primary();
+            table.date("date").notNullable();
+            table.string("company_name").notNullable();
+            table.string("address").notNullable();
+            table.string("attention").notNullable();
+            table.string("item_name").notNullable();
+            table.string("item_type").notNullable();
+            table.string("description").notNullable();
+            table.integer("quantity").notNullable();
+            table.string("unit").notNullable();
+            table.double("unit_cost").notNullable();
+            table.double("amount").notNullable();
+            table.string("remarks").notNullable();
+            table.timestamps(true, true);
+            // table
+            //   .integer("added_by")
+            //   .unsigned()
+            //   .notNullable()
+            //   .references("uuid") // Change this to "uuid" to match the primary key of "users" table
+            //   .inTable("users")
+            //   .onDelete("CASCADE");
+            table
+              .foreign("item_name")
+              .references("item_name")
+              .inTable("purchase_items");
+            table
+              .foreign("item_type")
+              .references("item_type")
+              .inTable("purchase_items");
+            table
+              .foreign("description")
+              .references("description")
+              .inTable("purchase_items");
+
+            table.index("item_name");
+            table.index("item_type");
+            table.index("description");
           })
 
           .createTable("logs", (table) => {
@@ -110,7 +154,8 @@ const userDao =
                 "Abaca Disease Management Project",
                 "Job Positions",
                 "Projects",
-                "PurchaseItems",
+                "Purchase Items",
+                "Purchase Request",
               ])
               .notNullable();
             table.string("action").notNullable();
