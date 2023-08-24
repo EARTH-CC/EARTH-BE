@@ -19,14 +19,12 @@ router.use(require("./tad/pmSurvived/_rest"));
 router.use(require("./tad/training/_rest"));
 router.use(require("./tad/ndrrm/_rest"));
 
-// JOB APPLICATION
-router.use(require("./jobApplication/jobappform/_rest"));
-router.use(require("./jobApplication/jobpositions/_rest"));
-
 // EARTH
 router.use(require("./Earth/Projects/_rest"));
 router.use(require("./Earth/purchaseItems/_rest"));
 router.use(require("./Earth/PurchaseRequest/_rest"));
 router.use(require("./Earth/Canvass/_rest"));
+router.use(require("./Earth/procurement/purchaseItems/_rest"));
+router.use(require("./Earth/procurement/PurchaseRequest/_rest"));
 
 module.exports = router;
