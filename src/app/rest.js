@@ -27,5 +27,6 @@ router.use(require("./jobApplication/jobpositions/_rest"));
 router.use(require("./Earth/Projects/_rest"));
 router.use(require("./Earth/purchaseItems/_rest"));
 router.use(require("./Earth/PurchaseRequest/_rest"));
+router.use(require("./Earth/Canvass/_rest"));
 
 module.exports = router;

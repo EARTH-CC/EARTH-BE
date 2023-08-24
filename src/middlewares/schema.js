@@ -106,13 +106,6 @@ const userDao =
             table.double("amount").notNullable();
             table.string("remarks").notNullable();
             table.timestamps(true, true);
-            // table
-            //   .integer("added_by")
-            //   .unsigned()
-            //   .notNullable()
-            //   .references("uuid") // Change this to "uuid" to match the primary key of "users" table
-            //   .inTable("users")
-            //   .onDelete("CASCADE");
             table
               .foreign("item_name")
               .references("item_name")
@@ -131,6 +124,29 @@ const userDao =
             table.index("description");
           })
 
+          .createTable("canvass", (table) => {
+            table.increments("uuid").primary();
+            table.date("date").notNullable();
+            table.string("company_name").notNullable();
+            table.string("address").notNullable();
+            table.string("tel_no").notNullable();
+            table.string("tin_no").notNullable();
+            table.integer("item_num").notNullable();
+            table.string("description").notNullable();
+            table.integer("quantity").notNullable();
+            table.string("unit").notNullable();
+            table.double("unit_price").notNullable();
+            table.double("total_amount").notNullable();
+            table.string("canvasser").notNullable();
+            table.timestamps(true, true);
+            table
+              .string("quoted_by_rep")
+              .notNullable()
+              .references("username")
+              .inTable("users")
+              .onDelete("RESTRICT");
+          })
+
           .createTable("logs", (table) => {
             table.increments("log_id").primary();
             table
@@ -143,19 +159,10 @@ const userDao =
               .enu("module", [
                 "Authentication",
                 "Nursery",
-                "Distribution",
-                "PM Survived",
-                "Expansion and Rehabilitation",
-                "Cotton",
-                "Cocoon",
-                "Training",
-                "Iec Material",
-                "Expansion Under Coconut Project",
-                "Abaca Disease Management Project",
-                "Job Positions",
                 "Projects",
                 "Purchase Items",
                 "Purchase Request",
+                "Canvass",
               ])
               .notNullable();
             table.string("action").notNullable();
