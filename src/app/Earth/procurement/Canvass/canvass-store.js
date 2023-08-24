@@ -1,5 +1,5 @@
 const { query } = require("express");
-const canvassTableConfig = require("../../../configuration/earthConfig/canvassTableConfig");
+const canvassTableConfig = require("../../../../configuration/earthConfig/canvassTableConfig");
 
 class PurchaseRequestStore {
   constructor(db) {

@@ -1,6 +1,6 @@
 const Store = require("./canvass-store");
-const Logs = require("../../logs/logs-store");
-const { NotFoundError } = require("../../../middlewares/errors");
+const Logs = require("../../../logs/logs-store");
+const { NotFoundError } = require("../../../../middlewares/errors");
 const moduleName = "Canvass";
 const userId = 1;
 

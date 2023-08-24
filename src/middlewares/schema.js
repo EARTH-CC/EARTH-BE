@@ -76,6 +76,7 @@ const userDao =
             table.date("date").notNullable();
             table.string("item_name").notNullable();
             table.string("item_type").notNullable();
+            table.string("item_code").notNullable();
             table.string("description").notNullable();
             table.timestamps(true, true);
             table
@@ -88,6 +89,7 @@ const userDao =
 
             table.index("item_name");
             table.index("item_type");
+            table.index("item_code");
             table.index("description");
           })
 
@@ -147,6 +149,30 @@ const userDao =
               .onDelete("RESTRICT");
           })
 
+          .createTable("purchase_order", (table) => {
+            table.increments("uuid").primary();
+            table.date("date").notNullable();
+            table.date("due_date").notNullable();
+            table.integer("purchase_order_no").notNullable();
+            table.string("company_name_supplier").notNullable();
+            table.string("address").notNullable();
+            table.string("terms_of_agreement").notNullable();
+            table.string("item_code").notNullable();
+            table.string("description").notNullable();
+            table.integer("quantity").notNullable();
+            table.string("unit").notNullable();
+            table.double("unit_price").notNullable();
+            table.double("amount").notNullable();
+            table.string("remarks").notNullable();
+            table.timestamps(true, true);
+            table
+              .foreign("item_code")
+              .references("item_code")
+              .inTable("purchase_items");
+
+            table.index("item_code");
+          })
+
           .createTable("logs", (table) => {
             table.increments("log_id").primary();
             table
@@ -163,6 +189,7 @@ const userDao =
                 "Purchase Items",
                 "Purchase Request",
                 "Canvass",
+                "Purchase Order",
               ])
               .notNullable();
             table.string("action").notNullable();

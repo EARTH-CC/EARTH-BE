@@ -1,10 +1,10 @@
 const express = require("express");
-const auth = require("../../../middlewares/auth");
-const db = require("../../../middlewares/db");
-const schema = require("../../../middlewares/schema");
+const auth = require("../../../../middlewares/auth");
+const db = require("../../../../middlewares/db");
+const schema = require("../../../../middlewares/schema");
 const asyncHandler = require("express-async-handler");
 const Service = require("./canvass-service");
-const uploadFile = require("../../../middlewares/upload-file");
+const uploadFile = require("../../../../middlewares/upload-file");
 
 const service = new Service();
 const router = express.Router();

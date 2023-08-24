@@ -1,7 +1,7 @@
 const Store = require("./purchaseOrder-store");
 const Logs = require("../../../logs/logs-store");
 const { NotFoundError } = require("../../../../middlewares/errors");
-const moduleName = "Purchase Request";
+const moduleName = "Purchase Order";
 const userId = 1;
 
 class PurchaseOrderService {
