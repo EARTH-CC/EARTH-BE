@@ -13,6 +13,7 @@ class PurchaseStore {
       date: data.date,
       item_name: data.item_name,
       item_type: data.item_type,
+      item_code: data.item_code,
       description: data.description,
       added_by: data.added_by,
     });
@@ -24,6 +25,7 @@ class PurchaseStore {
         date: body.date,
         item_name: body.item_name,
         item_type: body.item_type,
+        item_code: body.item_code,
         description: body.description,
       added_by: body.added_by,
     });

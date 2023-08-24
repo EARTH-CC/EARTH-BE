@@ -11,7 +11,7 @@ class PurchaseOrderStore {
   async add(data) {
     const validItem = await this.db("purchase_items")
       .where({
-        item_name: data.item_code,
+        item_code: data.item_code,
       })
       .first();
     if (!validItem) {
