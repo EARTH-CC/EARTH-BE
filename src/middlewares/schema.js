@@ -73,7 +73,6 @@ const userDao =
 
           .createTable("purchase_items", (table) => {
             table.increments("uuid").primary();
-            table.date("date").notNullable();
             table.string("item_name").notNullable();
             table.string("item_code").notNullable();
             table.string("category").notNullable();
@@ -92,6 +91,14 @@ const userDao =
             table.index("item_code");
             table.index("item_type");
             table.index("description");
+          })
+
+          .createTable("supplier", (table) => {
+            table.increments("uuid").primary();
+            table.string("company_name").notNullable();
+            table.string("address").notNullable();
+            table.string("tin_no").notNullable();
+            table.timestamps(true, true);
           })
 
           .createTable("purchase_request", (table) => {

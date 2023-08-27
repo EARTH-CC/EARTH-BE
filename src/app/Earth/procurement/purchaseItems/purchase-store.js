@@ -9,15 +9,35 @@ class PurchaseStore {
   }
 
   async add(data) {
+    const newItemCode = await this.generateItemCode();
+
     return await this.db(this.table).insert({
-      date: data.date,
       item_name: data.item_name,
+      item_code: newItemCode,
+      category: data.category,
       item_type: data.item_type,
-      item_code: data.item_code,
       description: data.description,
       added_by: data.added_by,
     });
   }
+
+  //generate item code
+  async generateItemCode() {
+    const highestItem = await this.db(this.table)
+      .max('item_code as max_item_code')
+      .first();
+  
+    if (highestItem && highestItem.max_item_code) {
+      const lastItemNumber = parseInt(highestItem.max_item_code.slice(4), 10);
+      if (!isNaN(lastItemNumber)) {
+        const newItemNumber = lastItemNumber + 1;
+        return `ITEM${newItemNumber.toString().padStart(3, '0')}`;
+      }
+    }
+    
+    return 'ITEM001';
+  }
+
 
   async update(uuid, body) {
     // Perform the update operation
@@ -153,6 +173,8 @@ class PurchaseStore {
   //   return count;
   // }
 }
+
+
 
 // function formatDate(dateString) {
 //   const date = moment(dateString, "YYYY/MM/DD", true);
