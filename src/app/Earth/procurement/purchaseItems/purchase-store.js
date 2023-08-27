@@ -48,7 +48,7 @@ class PurchaseStore {
   async getAll() {
     const results = await this.db(this.table)
       .select()
-      .orderBy([{ column: this.cols.date, order: "desc" }]);
+      .orderBy([{ order: "desc" }]);
     if (!results) {
       return null;
     }

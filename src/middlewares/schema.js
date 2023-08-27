@@ -75,8 +75,9 @@ const userDao =
             table.increments("uuid").primary();
             table.date("date").notNullable();
             table.string("item_name").notNullable();
-            table.string("item_type").notNullable();
             table.string("item_code").notNullable();
+            table.string("category").notNullable();
+            table.string("item_type").notNullable();
             table.string("description").notNullable();
             table.timestamps(true, true);
             table
@@ -88,8 +89,8 @@ const userDao =
               .onDelete("CASCADE");
 
             table.index("item_name");
-            table.index("item_type");
             table.index("item_code");
+            table.index("item_type");
             table.index("description");
           })
 
@@ -99,8 +100,6 @@ const userDao =
             table.string("company_name").notNullable();
             table.string("address").notNullable();
             table.string("attention").notNullable();
-            table.string("item_name").notNullable();
-            table.string("item_type").notNullable();
             table.string("description").notNullable();
             table.integer("quantity").notNullable();
             table.string("unit").notNullable();
@@ -109,20 +108,18 @@ const userDao =
             table.string("remarks").notNullable();
             table.timestamps(true, true);
             table
-              .foreign("item_name")
-              .references("item_name")
-              .inTable("purchase_items");
-            table
-              .foreign("item_type")
-              .references("item_type")
-              .inTable("purchase_items");
+              .integer("item_code")
+              .unsigned()
+              .notNullable()
+              .references("uuid") // Change this to "uuid" to match the primary key of "users" table
+              .inTable("purchase_items")
+              .onDelete("CASCADE");
             table
               .foreign("description")
               .references("description")
               .inTable("purchase_items");
 
-            table.index("item_name");
-            table.index("item_type");
+            table.index("item_code");
             table.index("description");
           })
 
@@ -133,7 +130,6 @@ const userDao =
             table.string("address").notNullable();
             table.string("tel_no").notNullable();
             table.string("tin_no").notNullable();
-            table.integer("item_num").notNullable();
             table.string("description").notNullable();
             table.integer("quantity").notNullable();
             table.string("unit").notNullable();
@@ -142,11 +138,24 @@ const userDao =
             table.string("canvasser").notNullable();
             table.timestamps(true, true);
             table
+              .integer("item_code")
+              .unsigned()
+              .notNullable()
+              .references("uuid") // Change this to "uuid" to match the primary key of "users" table
+              .inTable("purchase_items")
+              .onDelete("CASCADE");
+            table
+              .foreign("description")
+              .references("description")
+              .inTable("purchase_items");
+            table
               .string("quoted_by_rep")
               .notNullable()
               .references("username")
               .inTable("users")
               .onDelete("RESTRICT");
+
+            table.index("description");
           })
 
           .createTable("purchase_order", (table) => {
@@ -210,6 +219,22 @@ const userDao =
             lastname: "Salem",
             // region: "all",
             role: "superadmin",
+          },
+          {
+            username: "tejey",
+            password: "$2a$12$kIpzC4.O.tvwMQ0q7HaH7.v7usQ/jrl2SKq8CZ1MTpAGa72d1rv/2",
+            firstname: "Tejey",
+            lastname: "Casucog",
+            // region: "all",
+            role: "canvasser",
+          },
+          {
+            username: "mark",
+            password: "$2a$12$SyV2IQFzjS5hy/ubz2K64ePju1I.r8/wcdT/VF1ZL3RvCn/ujHWTK",
+            firstname: "Mark",
+            lastname: "Salem",
+            // region: "all",
+            role: "pr",
           },
           {
             username: "bontrade",

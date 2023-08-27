@@ -32,15 +32,16 @@ class PurchaseRequestStore {
       date: body.date,
       company_name: body.company_name,
       address: body.address,
-      attention: body.attention,
-      item_name: body.item_name,
-      item_type: body.item_type,
+      tel_no: body.tel_no,
+      tin_no: body.tin_no,
+      item_num: body.item_num,
       description: body.description,
       quantity: body.quantity,
       unit: body.unit,
-      unit_cost: body.unit_cost,
-      amount: body.amount,
-      remarks: body.remarks,
+      unit_price: body.unit_price,
+      total_amount: body.total_amount,
+      canvasser: body.canvasser,
+      quoted_by_rep: body.quoted_by_rep,
     });
 
     // Fetch the updated rows
