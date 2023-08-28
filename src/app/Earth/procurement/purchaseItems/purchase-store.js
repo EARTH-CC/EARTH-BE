@@ -9,33 +9,32 @@ class PurchaseStore {
   }
 
   async add(data) {
-    const newItemCode = await this.generateItemCode();
-
     return await this.db(this.table).insert({
-      item_name: data.item_name,
-      item_code: newItemCode,
+      item_code: data.item_code,
+      brand: data.brand,
       category: data.category,
-      item_type: data.item_type,
+      product: data.product,
       description: data.description,
       added_by: data.added_by,
     });
   }
 
-  //generate item code
-  async generateItemCode() {
-    const highestItem = await this.db(this.table)
-      .max('item_code as max_item_code')
-      .first();
-  
-    if (highestItem && highestItem.max_item_code) {
-      const lastItemNumber = parseInt(highestItem.max_item_code.slice(4), 10);
-      if (!isNaN(lastItemNumber)) {
-        const newItemNumber = lastItemNumber + 1;
-        return `ITEM${newItemNumber.toString().padStart(3, '0')}`;
-      }
+  async getAll() {
+    const results = await this.db(this.table)
+      .select()
+      .orderBy([
+        { column: this.cols.itemCode, order: "desc" },
+      ]);
+    
+    if (results.length === 0) {
+      return null;
     }
     
-    return 'ITEM001';
+    const columnNames = await this.db(this.table)
+      .columnInfo()
+      .then((columns) => Object.keys(columns));
+    
+    return results.length > 0 ? results : { columnNames };
   }
 
 

@@ -3,6 +3,7 @@ const Logs = require("../../../logs/logs-store");
 const { NotFoundError } = require("../../../../middlewares/errors");
 const moduleName = "PurchaseItems";
 const userId = 1;
+let currentCounter = 1;
 
 class PurchaseService {
   constructor(store) {}
@@ -13,8 +14,9 @@ class PurchaseService {
       const store = new Store(req.db);
       const logs = new Logs(req.db);
       const data = req.body;
-
-      const newProject = await store.add(data);
+      const item_code = generateReferenceCode(data);
+      
+      const newItem = await store.add({...data,item_code});
 
       res
         .status(201)
@@ -26,6 +28,8 @@ class PurchaseService {
       next(err);
     }
   }
+
+  
 
   // Get
   async get(req, res, next) {
@@ -41,6 +45,22 @@ class PurchaseService {
         success: true,
         data: result,
       });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getAllData(req, res, next) {
+    try {
+      const store = new Store(req.db);
+      const result = await store.getAllData();
+      if (!result) {
+        throw new NotFoundError("No Data in the Database");
+      }
+      return res.status(200).send({
+        success: true,
+        data: result,
+      })
     } catch (err) {
       next(err);
     }
@@ -152,6 +172,14 @@ class PurchaseService {
   //     }
   //   }
 }
+
+function generateReferenceCode(data) {
+  const currentYear = new Date().getFullYear();
+  const paddedCounter = currentCounter.toString().padStart(4, '0');
+  return `${data.brand.substring(0, 2).toUpperCase()}${data.category.substring(0, 2).toUpperCase()}${data.product.substring(0, 2).toUpperCase()}${currentYear}${paddedCounter}`;
+}
+
+
 
 // Function to convert Excel date to "dd/mm/yyyy" format
 // function convertExcelDate(excelDate) {

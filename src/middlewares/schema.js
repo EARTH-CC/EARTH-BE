@@ -71,12 +71,21 @@ const userDao =
               .onDelete("CASCADE");
           })
 
+          .createTable("supplier", (table) => {
+            table.increments("uuid").primary();
+            table.string("company_name").notNullable();
+            table.string("address").notNullable();
+            table.string("tin_no").notNullable();
+            table.string("tel_no").notNullable();
+            table.timestamps(true, true);
+          })
+
           .createTable("purchase_items", (table) => {
             table.increments("uuid").primary();
-            table.string("item_name").notNullable();
+            table.string("product").notNullable();
             table.string("item_code").notNullable();
             table.string("category").notNullable();
-            table.string("item_type").notNullable();
+            table.string("brand").notNullable();
             table.string("description").notNullable();
             table.timestamps(true, true);
             table
@@ -87,18 +96,10 @@ const userDao =
               .inTable("users")
               .onDelete("CASCADE");
 
-            table.index("item_name");
+            table.index("product");
             table.index("item_code");
-            table.index("item_type");
+            table.index("category");
             table.index("description");
-          })
-
-          .createTable("supplier", (table) => {
-            table.increments("uuid").primary();
-            table.string("company_name").notNullable();
-            table.string("address").notNullable();
-            table.string("tin_no").notNullable();
-            table.timestamps(true, true);
           })
 
           .createTable("purchase_request", (table) => {
