@@ -37,7 +37,6 @@ class PurchaseStore {
     return results.length > 0 ? results : { columnNames };
   }
 
-
   async update(uuid, body) {
     // Perform the update operation
     await this.db(this.table).where(this.cols.id, uuid).update({
@@ -62,19 +61,6 @@ class PurchaseStore {
       .select()
       .where(this.cols.id, uuid);
     return results;
-  }
-
-  async getAll() {
-    const results = await this.db(this.table)
-      .select()
-      .orderBy([{ order: "desc" }]);
-    if (!results) {
-      return null;
-    }
-    const columnNames = await this.db(this.table)
-      .columnInfo()
-      .then((columns) => Object.keys(columns));
-    return results.length > 0 ? convertedResults : { columnNames };
   }
 
   async delete(uuid) {
