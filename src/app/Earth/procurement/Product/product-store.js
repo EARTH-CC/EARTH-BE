@@ -42,11 +42,12 @@ class ProductStore {
   async update(uuid, body) {
     // Perform the update operation
     await this.db(this.table).where(this.cols.id, uuid).update({
-        date: body.date,
-        item_name: body.item_name,
-        item_type: body.item_type,
-        item_code: body.item_code,
-        description: body.description,
+      item_code: body.item_code,
+      brand_id: body.brand_id,
+      category_id: body.category_id,
+      supplier_id: body.supplier_id,
+      name: body.name,
+      description: body.description,
       added_by: body.added_by,
     });
 
