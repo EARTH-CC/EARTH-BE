@@ -14,15 +14,15 @@ class BrandService {
       const store = new Store(req.db);
       const logs = new Logs(req.db);
       const data = req.body;
-      
+
       const newBrand = await store.add(data);
 
-      res
-        .status(201)
-        .json({ message: "Brand added successfully",
-                uuid: userId,
-                module: moduleName, 
-                data: data });
+      res.status(201).json({
+        message: "Brand added successfully",
+        uuid: userId,
+        module: moduleName,
+        data: data,
+      });
     } catch (err) {
       next(err);
     }
@@ -49,15 +49,17 @@ class BrandService {
 
   async getAllData(req, res, next) {
     try {
+      let result = [];
       const store = new Store(req.db);
-      const result = await store.getAllData();
+      result = await store.getAll();
+
       if (!result) {
-        throw new NotFoundError("No Data in the Database");
+        result = [];
       }
       return res.status(200).send({
         success: true,
         data: result,
-      })
+      });
     } catch (err) {
       next(err);
     }

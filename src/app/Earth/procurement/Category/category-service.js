@@ -14,16 +14,17 @@ class CategoryService {
       const store = new Store(req.db);
       const logs = new Logs(req.db);
       const data = req.body;
-      
-      
+
       const newCategory = await store.add(data);
 
       res
         .status(201)
-        .json({ message: "Category added successfully",
-                uuid: userId,
-                module: moduleName, 
-                data: data });
+        .json({
+          message: "Category added successfully",
+          uuid: userId,
+          module: moduleName,
+          data: data,
+        });
     } catch (err) {
       next(err);
     }
@@ -50,15 +51,17 @@ class CategoryService {
 
   async getAllData(req, res, next) {
     try {
+      let result = [];
       const store = new Store(req.db);
-      const result = await store.getAllData();
+      result = await store.getAll();
+
       if (!result) {
-        throw new NotFoundError("No Data in the Database");
+        result = [];
       }
       return res.status(200).send({
         success: true,
         data: result,
-      })
+      });
     } catch (err) {
       next(err);
     }
@@ -173,8 +176,10 @@ class CategoryService {
 
 function generateReferenceCode(data) {
   const currentYear = new Date().getFullYear();
-  const paddedCounter = currentCounter.toString().padStart(4, '0');
-  return `${data.brand_id}${data.category_id}${data.supplier_id}${data.name.substring(0, 2).toUpperCase()}${currentYear}${paddedCounter}`;
+  const paddedCounter = currentCounter.toString().padStart(4, "0");
+  return `${data.brand_id}${data.category_id}${data.supplier_id}${data.name
+    .substring(0, 2)
+    .toUpperCase()}${currentYear}${paddedCounter}`;
 }
 
 // Function to convert Excel date to "dd/mm/yyyy" format

@@ -15,15 +15,17 @@ class ProductService {
       const logs = new Logs(req.db);
       const data = req.body;
       const item_code = generateReferenceCode(data);
-      
-      const newItem = await store.add({...data,item_code});
+
+      const newItem = await store.add({ ...data, item_code });
 
       res
         .status(201)
-        .json({ message: "Purchase Item added successfully",
-                uuid: userId,
-                module: moduleName, 
-                data: data });
+        .json({
+          message: "Purchase Item added successfully",
+          uuid: userId,
+          module: moduleName,
+          data: data,
+        });
     } catch (err) {
       next(err);
     }
@@ -50,15 +52,17 @@ class ProductService {
 
   async getAllData(req, res, next) {
     try {
+      let result = [];
       const store = new Store(req.db);
-      const result = await store.getAllData();
+      result = await store.getAll();
+
       if (!result) {
-        throw new NotFoundError("No Data in the Database");
+        result = [];
       }
       return res.status(200).send({
         success: true,
         data: result,
-      })
+      });
     } catch (err) {
       next(err);
     }

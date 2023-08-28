@@ -22,7 +22,7 @@ router.put("/category/update/:uuid", db, asyncHandler(service.update));
 router.delete("/category/delete/:uuid", db, asyncHandler(service.delete));
 
 //getAllData
-// router.get("/purchaseItems/get", db, asyncHandler(service.getAllData));
+router.get("/category/get", db, asyncHandler(service.getAllData));
 
 //Export
 // router.get("/project/export", db, asyncHandler(service.exportDataToExcel));

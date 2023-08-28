@@ -15,15 +15,16 @@ class SupplierService {
       const logs = new Logs(req.db);
       const data = req.body;
 
-      
       const newItem = await store.add(data);
 
       res
         .status(201)
-        .json({ message: "Supplier added successfully",
-                uuid: userId,
-                module: moduleName, 
-                data: data });
+        .json({
+          message: "Supplier added successfully",
+          uuid: userId,
+          module: moduleName,
+          data: data,
+        });
     } catch (err) {
       next(err);
     }
@@ -50,15 +51,17 @@ class SupplierService {
 
   async getAllData(req, res, next) {
     try {
+      let result = [];
       const store = new Store(req.db);
-      const result = await store.getAllData();
+      result = await store.getAll();
+
       if (!result) {
-        throw new NotFoundError("No Data in the Database");
+        result = [];
       }
       return res.status(200).send({
         success: true,
         data: result,
-      })
+      });
     } catch (err) {
       next(err);
     }
