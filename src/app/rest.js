@@ -23,7 +23,11 @@ router.use(require("./tad/ndrrm/_rest"));
 router.use(require("./Earth/Projects/_rest"));
 router.use(require("./Earth/procurement/Canvass/_rest"));
 router.use(require("./Earth/procurement/PurchaseRequest/_rest"));
-router.use(require("./Earth/procurement/purchaseItems/_rest"));
+router.use(require("./Earth/procurement/Product/_rest"));
+router.use(require("./Earth/procurement/Category/_rest"));
+router.use(require("./Earth/procurement/Category/_rest"));
+router.use(require("./Earth/procurement/Brand/_rest"));
+router.use(require("./Earth/procurement/Supplier/_rest"));
 router.use(require(".//Earth/procurement/purchaseOrder/_rest"));
 
 module.exports = router;

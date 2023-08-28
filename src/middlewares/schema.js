@@ -26,6 +26,7 @@ const userDao =
             table.string("refresh_token").nullable();
             table.integer("status").notNullable().defaultTo(1);
           })
+
           .createTable("nursery", (table) => {
             table.increments("uuid").primary();
             table.date("report_date").notNullable();
@@ -55,6 +56,82 @@ const userDao =
               .onDelete("RESTRICT");
           })
 
+          .createTable("brand", (table) => {
+            table.increments("uuid").primary();
+            table.string("name").notNullable();
+            table.timestamps(true, true);
+            table
+            .integer("status")
+            .defaultTo(1)
+            .notNullable();
+          })
+
+          .createTable("category", (table) => {
+            table.increments("uuid").primary();
+            table.string("name").notNullable();
+            table.timestamps(true, true);
+            table
+            .integer("status")
+            .defaultTo(1)
+            .notNullable();
+          })
+
+          .createTable("supplier", (table) => {
+            table.increments("uuid").primary();
+            table.string("company_name").notNullable();
+            table.string("address").notNullable();
+            table.string("phone_no").notNullable();
+            table.string("mobile_no").notNullable();
+            table.timestamps(true, true);
+            table
+            .integer("status")
+            .defaultTo(1)
+            .notNullable();
+          })
+
+          .createTable("product", (table) => {
+            table.increments("uuid").primary();
+            table.string("name").notNullable();
+            table.string("item_code").notNullable();
+            table
+              .integer("brand_id")
+              .unsigned()
+              .notNullable()
+              .references("uuid") // Change this to "uuid" to match the primary key of "users" table
+              .inTable("brand")
+              .onDelete("CASCADE");
+            table
+              .integer("category_id")
+              .unsigned()
+              .notNullable()
+              .references("uuid") // Change this to "uuid" to match the primary key of "users" table
+              .inTable("category")
+              .onDelete("CASCADE");
+            table
+              .integer("supplier_id")
+              .unsigned()
+              .notNullable()
+              .references("uuid") // Change this to "uuid" to match the primary key of "users" table
+              .inTable("supplier")
+              .onDelete("CASCADE");
+
+            table.string("description").nullable();
+            table
+            .integer("status")
+            .defaultTo(1)
+            .notNullable();
+            table.timestamps(true, true);
+            table
+              .integer("added_by")
+              .unsigned()
+              .notNullable()
+              .references("uuid") // Change this to "uuid" to match the primary key of "users" table
+              .inTable("users")
+              .onDelete("CASCADE");
+
+            table.index("item_code");
+          })
+
           .createTable("projects", (table) => {
             table.increments("uuid").primary();
             table.date("start_date").notNullable();
@@ -71,44 +148,14 @@ const userDao =
               .onDelete("CASCADE");
           })
 
-          .createTable("supplier", (table) => {
-            table.increments("uuid").primary();
-            table.string("company_name").notNullable();
-            table.string("address").notNullable();
-            table.string("tin_no").notNullable();
-            table.string("tel_no").notNullable();
-            table.timestamps(true, true);
-          })
-
-          .createTable("purchase_items", (table) => {
-            table.increments("uuid").primary();
-            table.string("product").notNullable();
-            table.string("item_code").notNullable();
-            table.string("category").notNullable();
-            table.string("brand").notNullable();
-            table.string("description").notNullable();
-            table.timestamps(true, true);
-            table
-              .integer("added_by")
-              .unsigned()
-              .notNullable()
-              .references("uuid") // Change this to "uuid" to match the primary key of "users" table
-              .inTable("users")
-              .onDelete("CASCADE");
-
-            table.index("product");
-            table.index("item_code");
-            table.index("category");
-            table.index("description");
-          })
-
           .createTable("purchase_request", (table) => {
             table.increments("uuid").primary();
             table.date("date").notNullable();
             table.string("company_name").notNullable();
             table.string("address").notNullable();
             table.string("attention").notNullable();
-            table.string("description").notNullable();
+            table.string("item_code").notNullable();
+            table.string("description").nullable();
             table.integer("quantity").notNullable();
             table.string("unit").notNullable();
             table.double("unit_cost").notNullable();
@@ -116,19 +163,11 @@ const userDao =
             table.string("remarks").notNullable();
             table.timestamps(true, true);
             table
-              .integer("item_code")
-              .unsigned()
-              .notNullable()
-              .references("uuid") // Change this to "uuid" to match the primary key of "users" table
-              .inTable("purchase_items")
-              .onDelete("CASCADE");
-            table
-              .foreign("description")
-              .references("description")
-              .inTable("purchase_items");
+              .foreign("item_code")
+              .references("item_code")
+              .inTable("product");
 
             table.index("item_code");
-            table.index("description");
           })
 
           .createTable("canvass", (table) => {
@@ -138,7 +177,8 @@ const userDao =
             table.string("address").notNullable();
             table.string("tel_no").notNullable();
             table.string("tin_no").notNullable();
-            table.string("description").notNullable();
+            table.string("item_code").notNullable();
+            table.string("description").nullable();
             table.integer("quantity").notNullable();
             table.string("unit").notNullable();
             table.double("unit_price").notNullable();
@@ -146,24 +186,11 @@ const userDao =
             table.string("canvasser").notNullable();
             table.timestamps(true, true);
             table
-              .integer("item_code")
-              .unsigned()
-              .notNullable()
-              .references("uuid") // Change this to "uuid" to match the primary key of "users" table
-              .inTable("purchase_items")
-              .onDelete("CASCADE");
-            table
-              .foreign("description")
-              .references("description")
-              .inTable("purchase_items");
-            table
-              .string("quoted_by_rep")
-              .notNullable()
-              .references("username")
-              .inTable("users")
-              .onDelete("RESTRICT");
+              .foreign("item_code")
+              .references("item_code")
+              .inTable("product");
 
-            table.index("description");
+            table.index("item_code");
           })
 
           .createTable("purchase_order", (table) => {
@@ -175,7 +202,7 @@ const userDao =
             table.string("address").notNullable();
             table.string("terms_of_agreement").notNullable();
             table.string("item_code").notNullable();
-            table.string("description").notNullable();
+            table.string("description").nullable();
             table.integer("quantity").notNullable();
             table.string("unit").notNullable();
             table.double("unit_price").notNullable();
@@ -185,7 +212,7 @@ const userDao =
             table
               .foreign("item_code")
               .references("item_code")
-              .inTable("purchase_items");
+              .inTable("product");
 
             table.index("item_code");
           })
@@ -203,10 +230,12 @@ const userDao =
                 "Authentication",
                 "Nursery",
                 "Projects",
-                "Purchase Items",
+                "Products",
                 "Purchase Request",
                 "Canvass",
                 "Purchase Order",
+                "Categories",
+                "Suppliers",
               ])
               .notNullable();
             table.string("action").notNullable();
@@ -230,7 +259,8 @@ const userDao =
           },
           {
             username: "tejey",
-            password: "$2a$12$kIpzC4.O.tvwMQ0q7HaH7.v7usQ/jrl2SKq8CZ1MTpAGa72d1rv/2",
+            password:
+              "$2a$12$kIpzC4.O.tvwMQ0q7HaH7.v7usQ/jrl2SKq8CZ1MTpAGa72d1rv/2",
             firstname: "Tejey",
             lastname: "Casucog",
             // region: "all",
@@ -238,7 +268,8 @@ const userDao =
           },
           {
             username: "mark",
-            password: "$2a$12$SyV2IQFzjS5hy/ubz2K64ePju1I.r8/wcdT/VF1ZL3RvCn/ujHWTK",
+            password:
+              "$2a$12$SyV2IQFzjS5hy/ubz2K64ePju1I.r8/wcdT/VF1ZL3RvCn/ujHWTK",
             firstname: "Mark",
             lastname: "Salem",
             // region: "all",
