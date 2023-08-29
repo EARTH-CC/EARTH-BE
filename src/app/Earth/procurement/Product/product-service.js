@@ -64,6 +64,7 @@ class ProductService {
     }
   }
 
+  //Get All Data
   async getAllData(req, res, next) {
     try {
       let result = [];
