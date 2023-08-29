@@ -15,17 +15,31 @@ class ProductService {
       const logs = new Logs(req.db);
       const data = req.body;
       const item_code = generateReferenceCode(data);
-
+  
       const newItem = await store.add({ ...data, item_code });
-
-      res
-        .status(201)
-        .json({
-          message: "Purchase Item added successfully",
-          uuid: userId,
-          module: moduleName,
-          data: data,
-        });
+  
+      // Retrieve brand name using brand_id
+      const brand = await store.getBrandById(data.brand_id);
+  
+      // Retrieve category name using category_id
+      const category = await store.getCategoryById(data.category_id);
+  
+      // Retrieve supplier name using supplier_id
+      const supplier = await store.getSupplierById(data.supplier_id);
+  
+      res.status(201).json({
+        message: "Product added successfully",
+        uuid: userId,
+        module: moduleName,
+        data: {
+          name: newItem.name,
+          description: newItem.description,
+          brand_name: brand.name,
+          category_name: category.name,
+          supplier_name: supplier.name,
+          added_by: newItem.added_by,
+        },
+      });
     } catch (err) {
       next(err);
     }
@@ -121,7 +135,7 @@ class ProductService {
       });
       return res.status(202).send({
         success: true,
-        message: "Purchase Deleted successfuly",
+        message: "Product Deleted successfuly",
       });
     } catch (err) {
       next(err);

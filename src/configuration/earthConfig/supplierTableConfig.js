@@ -2,7 +2,7 @@ module.exports = {
     tableName: 'supplier',
     columnNames: {
       id: 'uuid',
-      companyName: 'company_name',
+      companyName: 'name',
       address: 'address',
       phoneId: 'phone_no',
       mobileNo: 'mobile_no',

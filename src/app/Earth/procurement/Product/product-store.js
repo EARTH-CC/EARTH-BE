@@ -10,7 +10,7 @@ class ProductStore {
   }
 
   async add(data) {
-    return await this.db(this.table).insert({
+    const newProduct = {
       item_code: data.item_code,
       brand_id: data.brand_id,
       category_id: data.category_id,
@@ -18,25 +18,49 @@ class ProductStore {
       name: data.name,
       description: data.description,
       added_by: data.added_by,
-    });
+    };
+    // Insert the new product into the database
+    const insertedProduct = await this.db(this.table).insert(newProduct);
+  
+    // Return the modified newProduct object
+    return {
+      ...newProduct,
+      uuid: insertedProduct[0], // Assuming your database returns the inserted ID
+    };
+  }
+
+  async getSupplierById(supplierId) {
+    return await this.db('supplier').select('name').where('uuid', supplierId).first();
+  }
+
+  async getCategoryById(categoryId) {
+    return await this.db('category').select('name').where('uuid', categoryId).first();
+  }
+
+  async getBrandById(brandId) {
+    return await this.db('brand').select('name').where('uuid', brandId).first();
   }
 
   async getAll() {
     const results = await this.db(this.table)
-      .select()
-      .orderBy([
-        { column: this.cols.itemCode, order: "desc" },
-      ]);
-    
-    if (results.length === 0) {
-      return null;
-    }
-    
-    const columnNames = await this.db(this.table)
-      .columnInfo()
-      .then((columns) => Object.keys(columns));
-    
-    return results.length > 0 ? results : { columnNames };
+      .select(
+        'product.uuid',
+        'product.name',
+        'product.item_code',
+        'product.description',
+        'product.status',
+        'product.created_at',
+        'product.updated_at',
+        'product.added_by',
+        'brand.name as brand_name',
+        'category.name as category_name',
+        'supplier.name as supplier_name'
+      )
+      .join('brand', 'product.brand_id', '=', 'brand.uuid')
+      .join('category', 'product.category_id', '=', 'category.uuid')
+      .join('supplier', 'product.supplier_id', '=', 'supplier.uuid');
+  
+    return results;
   }
 
   async update(uuid, body) {

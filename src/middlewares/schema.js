@@ -78,7 +78,7 @@ const userDao =
 
           .createTable("supplier", (table) => {
             table.increments("uuid").primary();
-            table.string("company_name").notNullable();
+            table.string("name").notNullable();
             table.string("address").notNullable();
             table.string("phone_no").notNullable();
             table.string("mobile_no").notNullable();

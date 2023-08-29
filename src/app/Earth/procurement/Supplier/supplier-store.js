@@ -11,7 +11,7 @@ class SupplierStore {
 
   async add(data) {
     return await this.db(this.table).insert({
-        company_name: data.company_name,
+        name: data.name,
         address: data.address,
         phone_no: data.phone_no,
         mobile_no: data.mobile_no,
@@ -39,7 +39,7 @@ class SupplierStore {
   async update(uuid, body) {
     // Perform the update operation
     await this.db(this.table).where(this.cols.id, uuid).update({
-        company_name: body.company_name,
+        name: body.name,
         address: body.address,
         phone_no: body.phone_no,
         mobile_no: body.mobile_no,
