@@ -59,6 +59,7 @@ class ProductService {
       }
       
       res.status(200).json({
+        module: moduleName,
         data: priceRange,
       });
     } catch (err) {
