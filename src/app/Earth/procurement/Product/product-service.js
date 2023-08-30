@@ -55,11 +55,8 @@ class ProductService {
       if (startRange && endRange) {
         priceRange = await store.getPrice(startRange, endRange);
       } else {
-        priceRange = await store.getAll(); // Implement this method in your DAO
+        priceRange = await store.getAll(); 
       }
-
-      // Process priceRange data as needed
-      // For example, transform data or apply additional logic
       
       res.status(200).json({
         data: priceRange,
