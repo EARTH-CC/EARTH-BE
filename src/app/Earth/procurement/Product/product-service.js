@@ -35,10 +35,34 @@ class ProductService {
           name: newItem.name,
           description: newItem.description,
           brand_name: brand.name,
+          price: newItem.price,
           category_name: category.name,
           supplier_name: supplier.name,
           added_by: newItem.added_by,
         },
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getPriceRange(req, res, next) {
+    try {
+      const { startRange, endRange } = req.query;
+      const store = new Store(req.db);
+
+      let priceRange;
+      if (startRange && endRange) {
+        priceRange = await store.getPrice(startRange, endRange);
+      } else {
+        priceRange = await store.getAll(); // Implement this method in your DAO
+      }
+
+      // Process priceRange data as needed
+      // For example, transform data or apply additional logic
+      
+      res.status(200).json({
+        data: priceRange,
       });
     } catch (err) {
       next(err);

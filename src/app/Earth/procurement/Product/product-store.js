@@ -13,6 +13,7 @@ class ProductStore {
     const newProduct = {
       item_code: data.item_code,
       brand_id: data.brand_id,
+      price: data.price,
       category_id: data.category_id,
       supplier_id: data.supplier_id,
       name: data.name,
@@ -41,11 +42,20 @@ class ProductStore {
     return await this.db('brand').select('name').where('uuid', brandId).first();
   }
 
+  async getPrice(startRange, endRange) {
+    const products = await this.db(this.table)
+    .select('*')
+    .whereBetween('price', [startRange, endRange]);
+
+    return products;
+  }
+
   async getAll() {
     const results = await this.db(this.table)
       .select(
         'product.uuid',
         'product.name',
+        'product.price',
         'product.item_code',
         'product.description',
         'product.status',

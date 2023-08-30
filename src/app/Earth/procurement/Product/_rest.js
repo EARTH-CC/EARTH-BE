@@ -24,6 +24,9 @@ router.delete("/product/delete/:uuid", db, asyncHandler(service.delete));
 //getAllData
 router.get("/product/get", db, asyncHandler(service.getAllData));
 
+//getPriceRange
+router.get("/product/price", db, asyncHandler(service.getPriceRange));
+
 //Export
 // router.get("/project/export", db, asyncHandler(service.exportDataToExcel));
 

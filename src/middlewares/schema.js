@@ -93,6 +93,7 @@ const userDao =
             table.increments("uuid").primary();
             table.string("name").notNullable();
             table.string("item_code").notNullable();
+            table.double("price").notNullable();
             table
               .integer("brand_id")
               .unsigned()
@@ -130,6 +131,7 @@ const userDao =
               .onDelete("CASCADE");
 
             table.index("item_code");
+            table.index("price");
           })
 
           .createTable("projects", (table) => {
@@ -181,7 +183,7 @@ const userDao =
             table.string("description").nullable();
             table.integer("quantity").notNullable();
             table.string("unit").notNullable();
-            table.double("unit_price").notNullable();
+            table.double("price").notNullable();
             table.double("total_amount").notNullable();
             table.string("canvasser").notNullable();
             table.timestamps(true, true);
@@ -190,7 +192,13 @@ const userDao =
               .references("item_code")
               .inTable("product");
 
+              table
+              .foreign("price")
+              .references("price")
+              .inTable("product");
+
             table.index("item_code");
+            table.index("price");
           })
 
           .createTable("purchase_order", (table) => {
