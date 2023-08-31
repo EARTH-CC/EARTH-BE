@@ -18,12 +18,20 @@ class PurchaseRequestStore {
       item_num: data.item_num,
       description: data.description,
       quantity: data.quantity,
-      unit: data.unit,
-      unit_price: data.unit_price,
+      rating: data.rating,
+      price: data.price,
       total_amount: data.total_amount,
       canvasser: data.canvasser,
       quoted_by_rep: data.quoted_by_rep,
     });
+  }
+
+  async getPrice(startRange, endRange) {
+    const products = await this.db(this.table)
+    .select('*')
+    .whereBetween('price', [startRange, endRange]);
+
+    return products;
   }
 
   async update(uuid, body) {
@@ -61,16 +69,41 @@ class PurchaseRequestStore {
 
   async getAll() {
     const results = await this.db(this.table)
-      .select()
-      .orderBy([{ column: this.cols.date, order: "desc" }]);
-    if (!results) {
-      return null;
-    }
-    const columnNames = await this.db(this.table)
-      .columnInfo()
-      .then((columns) => Object.keys(columns));
-    return results.length > 0 ? convertedResults : { columnNames };
+      .select(
+        'product.uuid',
+        'product.name',
+        'product.price',
+        'product.item_code',
+        'product.description',
+        'product.status',
+        'product.created_at',
+        'product.updated_at',
+        'product.added_by',
+        'brand.name as brand_name',
+        'category.name as category_name',
+        'supplier.name as supplier_name'
+      )
+      .join('brand', 'product.brand_id', '=', 'brand.uuid')
+      .join('category', 'product.category_id', '=', 'category.uuid')
+      .join('supplier', 'product.supplier_id', '=', 'supplier.uuid');
+  
+    return results;
   }
+
+  // async getAll() {
+  //   const results = await this.db(this.table)
+  //     .select()
+  //     .orderBy([{ column: this.cols.date, order: "desc" }]);
+  //   if (!results) {
+  //     return null;
+  //   }
+  //   const columnNames = await this.db(this.table)
+  //     .columnInfo()
+  //     .then((columns) => Object.keys(columns));
+  //   return results.length > 0 ? convertedResults : { columnNames };
+  // }
+
+
 
   async delete(uuid) {
     const deletedRows = await this.db(this.table)

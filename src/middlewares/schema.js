@@ -182,7 +182,7 @@ const userDao =
             table.string("item_code").notNullable();
             table.string("description").nullable();
             table.integer("quantity").notNullable();
-            table.string("unit").notNullable();
+            table.integer("rating").notNullable();
             table.double("price").notNullable();
             table.double("total_amount").notNullable();
             table.string("canvasser").notNullable();
