@@ -15,30 +15,14 @@ class ProductService {
       const logs = new Logs(req.db);
       const data = req.body;
       const item_code = generateReferenceCode(data);
-  
-      const newItem = await store.add({ ...data, item_code });
-  
-      // Retrieve brand name using brand_id
-      const brand = await store.getBrandById(data.brand_id);
-  
-      // Retrieve category name using category_id
-      const category = await store.getCategoryById(data.category_id);
-  
-      // Retrieve supplier name using supplier_id
-      const supplier = await store.getSupplierById(data.supplier_id);
-  
+
+      const result = await store.add({ ...data, item_code, ...{added_by: userId} });
+
       res.status(201).json({
         message: "Product added successfully",
-        uuid: userId,
         module: moduleName,
         data: {
-          name: newItem.name,
-          description: newItem.description,
-          brand_name: brand.name,
-          price: newItem.price,
-          category_name: category.name,
-          supplier_name: supplier.name,
-          added_by: newItem.added_by,
+          ...result,
         },
       });
     } catch (err) {
@@ -55,9 +39,9 @@ class ProductService {
       if (startRange && endRange) {
         priceRange = await store.getPrice(startRange, endRange);
       } else {
-        priceRange = await store.getAll(); 
+        priceRange = await store.getAll();
       }
-      
+
       res.status(200).json({
         module: moduleName,
         data: priceRange,
@@ -214,8 +198,10 @@ class ProductService {
 
 function generateReferenceCode(data) {
   const currentYear = new Date().getFullYear();
-  const paddedCounter = currentCounter.toString().padStart(4, '0');
-  return `${data.brand_id}${data.category_id}${data.supplier_id}${data.name.substring(0, 2).toUpperCase()}${currentYear}${paddedCounter}`;
+  const paddedCounter = currentCounter.toString().padStart(4, "0");
+  return `${data.brand_id}${data.category_id}${data.supplier_id}${data.name
+    .substring(0, 2)
+    .toUpperCase()}${currentYear}${paddedCounter}`;
 }
 
 // Function to convert Excel date to "dd/mm/yyyy" format

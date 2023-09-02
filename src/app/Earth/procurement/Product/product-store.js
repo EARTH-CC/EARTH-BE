@@ -20,32 +20,37 @@ class ProductStore {
       description: data.description,
       added_by: data.added_by,
     };
-    // Insert the new product into the database
-    const insertedProduct = await this.db(this.table).insert(newProduct);
-  
-    // Return the modified newProduct object
+
+    const uuid = await this.db(this.table).insert(newProduct);
+
     return {
+      uid: uuid[0],
       ...newProduct,
-      uuid: insertedProduct[0], // Assuming your database returns the inserted ID
     };
   }
 
   async getSupplierById(supplierId) {
-    return await this.db('supplier').select('name').where('uuid', supplierId).first();
+    return await this.db("supplier")
+      .select("name")
+      .where("uuid", supplierId)
+      .first();
   }
 
   async getCategoryById(categoryId) {
-    return await this.db('category').select('name').where('uuid', categoryId).first();
+    return await this.db("category")
+      .select("name")
+      .where("uuid", categoryId)
+      .first();
   }
 
   async getBrandById(brandId) {
-    return await this.db('brand').select('name').where('uuid', brandId).first();
+    return await this.db("brand").select("name").where("uuid", brandId).first();
   }
 
   async getPrice(startRange, endRange) {
     const products = await this.db(this.table)
-    .select('*')
-    .whereBetween('price', [startRange, endRange]);
+      .select("*")
+      .whereBetween("price", [startRange, endRange]);
 
     return products;
   }
@@ -53,23 +58,23 @@ class ProductStore {
   async getAll() {
     const results = await this.db(this.table)
       .select(
-        'product.uuid',
-        'product.name',
-        'product.price',
-        'product.item_code',
-        'product.description',
-        'product.status',
-        'product.created_at',
-        'product.updated_at',
-        'product.added_by',
-        'brand.name as brand_name',
-        'category.name as category_name',
-        'supplier.name as supplier_name'
+        "product.uuid",
+        "product.name",
+        "product.price",
+        "product.item_code",
+        "product.description",
+        "product.status",
+        "product.created_at",
+        "product.updated_at",
+        "product.added_by",
+        "brand.name as brand_name",
+        "category.name as category_name",
+        "supplier.name as supplier_name"
       )
-      .join('brand', 'product.brand_id', '=', 'brand.uuid')
-      .join('category', 'product.category_id', '=', 'category.uuid')
-      .join('supplier', 'product.supplier_id', '=', 'supplier.uuid');
-  
+      .join("brand", "product.brand_id", "=", "brand.uuid")
+      .join("category", "product.category_id", "=", "category.uuid")
+      .join("supplier", "product.supplier_id", "=", "supplier.uuid");
+
     return results;
   }
 
