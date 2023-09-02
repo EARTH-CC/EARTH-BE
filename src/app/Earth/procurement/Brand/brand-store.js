@@ -9,9 +9,25 @@ class BrandStore {
   }
 
   async add(data) {
-    return await this.db(this.table).insert({
+
+    const existing = await this.db(this.table)
+    .where('name', data.name)
+    .first();
+
+    if (existing) {
+      throw new Error('Brand name already exists!');
+    }
+
+    const newBrand = {
       name: data.name,
-    });
+    }
+
+    const uuid = await this.db(this.table).insert(newBrand);
+
+    return {
+      uid: uuid[0],
+      ...newBrand,
+    };
   }
 
   async getAll() {

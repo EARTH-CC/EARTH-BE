@@ -10,6 +10,15 @@ class ProductStore {
   }
 
   async add(data) {
+
+    const existing = await this.db(this.table)
+    .where('name', data.name)
+    .first();
+    
+    if (existing) {
+      throw new Error('Product with the same name already exists!');
+    }
+
     const newProduct = {
       item_code: data.item_code,
       brand_id: data.brand_id,
@@ -29,23 +38,23 @@ class ProductStore {
     };
   }
 
-  async getSupplierById(supplierId) {
-    return await this.db("supplier")
-      .select("name")
-      .where("uuid", supplierId)
-      .first();
-  }
+  // async getSupplierById(supplierId) {
+  //   return await this.db("supplier")
+  //     .select("name")
+  //     .where("uuid", supplierId)
+  //     .first();
+  // }
 
-  async getCategoryById(categoryId) {
-    return await this.db("category")
-      .select("name")
-      .where("uuid", categoryId)
-      .first();
-  }
+  // async getCategoryById(categoryId) {
+  //   return await this.db("category")
+  //     .select("name")
+  //     .where("uuid", categoryId)
+  //     .first();
+  // }
 
-  async getBrandById(brandId) {
-    return await this.db("brand").select("name").where("uuid", brandId).first();
-  }
+  // async getBrandById(brandId) {
+  //   return await this.db("brand").select("name").where("uuid", brandId).first();
+  // }
 
   async getPrice(startRange, endRange) {
     const products = await this.db(this.table)
@@ -88,6 +97,7 @@ class ProductStore {
       name: body.name,
       description: body.description,
       added_by: body.added_by,
+      status: body.status,
     });
 
     // Fetch the updated rows

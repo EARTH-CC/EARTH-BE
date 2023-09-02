@@ -118,7 +118,7 @@ class BrandService {
       });
       return res.status(202).send({
         success: true,
-        message: "Purchase Deleted successfuly",
+        message: "Brand Deleted successfuly",
       });
     } catch (err) {
       next(err);

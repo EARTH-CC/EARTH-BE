@@ -10,12 +10,28 @@ class SupplierStore {
   }
 
   async add(data) {
-    return await this.db(this.table).insert({
-        name: data.name,
-        address: data.address,
-        phone_no: data.phone_no,
-        mobile_no: data.mobile_no,
-    });
+
+    const existing = await this.db(this.table)
+    .where('name', data.name)
+    .first();
+
+    if (existing) {
+      throw new Error('Supplier already exists.');
+    }
+
+    const newSupplier = {
+      name: data.name,
+      address: data.address,
+      phone_no: data.phone_no,
+      mobile_no: data.mobile_no,
+    };
+
+    const uuid = await this.db(this.table).insert(newSupplier);
+
+    return {
+        uid: uuid[0],
+        ...newSupplier,
+    };
   }
 
   async getAll() {

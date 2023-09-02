@@ -6,8 +6,8 @@ const db = (req, res, next) => {
       port: 3306,
       user: "root",
       // password: "philfida",
-      password: "1234",
-      // password: "macmac",
+      // password: "1234",
+      password: "macmac",
       database: "earth",
     },
   });

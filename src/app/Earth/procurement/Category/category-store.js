@@ -10,9 +10,26 @@ class CategoryStore {
   }
 
   async add(data) {
-    return await this.db(this.table).insert({
+
+    const existing = await this.db(this.table)
+    .where('name', data.name)
+    .first();
+
+    if (existing) {
+      throw new Error('Product with the same name already exists!');
+    }
+
+    const newCategory = {
       name: data.name,
-    });
+    }
+
+    const uuid = await this.db(this.table).insert(newCategory);
+
+
+    return {
+      uid: uuid[0],
+      ...newCategory,
+    };
   }
 
   async getAll() {
