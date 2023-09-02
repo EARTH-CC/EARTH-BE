@@ -31,6 +31,7 @@ class ProductService {
   }
 
   async getPriceRange(req, res, next) {
+    
     try {
       const { startRange, endRange } = req.query;
       const store = new Store(req.db);
