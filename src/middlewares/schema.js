@@ -203,11 +203,6 @@ const userDao =
               .references("price")
               .inTable("product");
 
-            table
-              .foreign("rating")
-              .references("rating")
-              .inTable("product");
-
             table.index("item_code");
             table.index("price");
           })
