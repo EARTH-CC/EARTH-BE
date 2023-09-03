@@ -3,7 +3,7 @@ const auth = require("../../../../middlewares/auth");
 const db = require("../../../../middlewares/db");
 const schema = require("../../../../middlewares/schema");
 const asyncHandler = require("express-async-handler");
-const Service = require("./purchaseRequestService");
+const Service = require("./purchaseRequest-service");
 const uploadFile = require("../../../../middlewares/upload-file");
 
 const service = new Service();

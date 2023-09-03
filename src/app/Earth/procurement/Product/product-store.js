@@ -1,7 +1,6 @@
 const { query } = require("express");
 const productTableConfig = require("../../../../configuration/earthConfig/productTableConfig");
 
-
 class ProductStore {
   constructor(db) {
     this.db = db;
@@ -10,13 +9,10 @@ class ProductStore {
   }
 
   async add(data) {
+    const existing = await this.db(this.table).where("name", data.name).first();
 
-    const existing = await this.db(this.table)
-    .where('name', data.name)
-    .first();
-    
     if (existing) {
-      throw new Error('Product with the same name already exists!');
+      throw new Error("Product with the same name already exists!");
     }
 
     const newProduct = {
@@ -76,6 +72,8 @@ class ProductStore {
         "product.created_at",
         "product.updated_at",
         "product.added_by",
+        "supplier.name as supplier_company",
+        "supplier.address as supplier_address",
         "brand.name as brand_name",
         "category.name as category_name",
         "supplier.name as supplier_name"
@@ -210,8 +208,6 @@ class ProductStore {
   //   return count;
   // }
 }
-
-
 
 // function formatDate(dateString) {
 //   const date = moment(dateString, "YYYY/MM/DD", true);
