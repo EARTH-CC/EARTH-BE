@@ -9,30 +9,41 @@ class PurchaseOrderStore {
   }
 
   async add(data) {
-    const validItem = await this.db("purchase_items")
+    const validItem = await this.db("product")
       .where({
         item_code: data.item_code,
       })
       .first();
+  
     if (!validItem) {
       throw new Error("Invalid item references");
     }
-
-    return await this.db(this.table).insert({
+  
+    const total_amount = data.quantity * validItem.price;
+  
+    const insertedData = {
       date: data.date,
-      due_Date: data.due_date,
-      purchase_order_no: data.purchase_order_no,
+      due_date: data.due_date,
+      purchase_request_no: data.purchase_request_no,
       company_name_supplier: data.company_name_supplier,
       address: data.address,
       terms_of_agreement: data.terms_of_agreement,
       item_code: data.item_code,
       description: data.description,
       quantity: data.quantity,
-      unit: data.unit,
-      unit_price: data.unit_price,
-      amount: data.amount,
+      price: validItem.price,
+      total_amount: total_amount,
       remarks: data.remarks,
-    });
+    };
+  
+    const uuid = await this.db(this.table).insert(insertedData);
+  
+    return {
+      uid: uuid[0],
+      ...insertedData,
+      price: validItem.price,
+      total_amount: total_amount,
+    };
   }
 
   async update(uuid, body) {

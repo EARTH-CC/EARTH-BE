@@ -42,7 +42,6 @@ class ProductService {
       } else {
         priceRange = await store.getAll();
       }
-
       res.status(200).json({
         module: moduleName,
         data: priceRange,

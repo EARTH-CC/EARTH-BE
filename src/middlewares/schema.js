@@ -156,6 +156,7 @@ const userDao =
           })
 
           .createTable("purchase_request", (table) => {
+
             table.increments("uuid").primary();
             table.date("date").notNullable();
             table.string("company_name").notNullable();
@@ -164,17 +165,22 @@ const userDao =
             table.string("item_code").notNullable();
             table.string("description").nullable();
             table.integer("quantity").notNullable();
-            table.string("unit").notNullable();
-            table.double("unit_cost").notNullable();
-            table.double("amount").notNullable();
+            table.double("price").notNullable();
+            table.double("total_amount").notNullable();
             table.string("remarks").notNullable();
             table.timestamps(true, true);
             table
               .foreign("item_code")
               .references("item_code")
               .inTable("product");
+            table
+              .foreign("price")
+              .references("price")
+              .inTable("product");
 
             table.index("item_code");
+            table.index("price");
+            table.index("total_amount");
           })
 
           .createTable("canvass", (table) => {
@@ -216,27 +222,42 @@ const userDao =
           })
 
           .createTable("purchase_order", (table) => {
-            table.increments("uuid").primary();
+            table.increments("uuid").primary(); //purchase order num
             table.date("date").notNullable();
             table.date("due_date").notNullable();
-            table.integer("purchase_order_no").notNullable();
             table.string("company_name_supplier").notNullable();
             table.string("address").notNullable();
             table.string("terms_of_agreement").notNullable();
             table.string("item_code").notNullable();
             table.string("description").nullable();
             table.integer("quantity").notNullable();
-            table.string("unit").notNullable();
-            table.double("unit_price").notNullable();
-            table.double("amount").notNullable();
+            table.double("price").notNullable();
+            table.double("total_amount").notNullable();
             table.string("remarks").notNullable();
             table.timestamps(true, true);
+            table
+              .integer("purchase_request_no")
+              .unsigned()
+              .notNullable()
+              .references("uuid")
+              .inTable("purchase_request")
+              .onDelete("CASCADE");
             table
               .foreign("item_code")
               .references("item_code")
               .inTable("product");
+            table
+              .foreign("price")
+              .references("price")
+              .inTable("product");
+            table
+              .foreign("total_amount")
+              .references("total_amount")
+              .inTable("purchase_request");
 
             table.index("item_code");
+            table.index("price");
+            table.index("total_amount");
           })
 
           .createTable("logs", (table) => {

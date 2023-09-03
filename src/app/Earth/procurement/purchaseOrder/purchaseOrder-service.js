@@ -16,12 +16,16 @@ class PurchaseOrderService {
 
       const newOrder = await store.add(data);
 
+      data.price = newOrder.price;
+      data.total_amount = newOrder.total_amount;
+
       res
         .status(201)
         .json({ message: "Order added successfully",
                 uuid: userId,
                 module: moduleName, 
-                data: data });
+                data: data,
+              });
     } catch (err) {
       next(err);
     }

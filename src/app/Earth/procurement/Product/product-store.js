@@ -68,6 +68,7 @@ class ProductStore {
     const results = await this.db(this.table)
       .select(
         "product.uuid",
+        "product.rating",
         "product.name",
         "product.price",
         "product.item_code",
