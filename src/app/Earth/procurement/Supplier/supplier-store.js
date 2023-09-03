@@ -24,6 +24,7 @@ class SupplierStore {
       address: data.address,
       phone_no: data.phone_no,
       mobile_no: data.mobile_no,
+      tin_no: data.tin_no,
     };
 
     const uuid = await this.db(this.table).insert(newSupplier);

@@ -60,20 +60,14 @@ const userDao =
             table.increments("uuid").primary();
             table.string("name").notNullable();
             table.timestamps(true, true);
-            table
-            .integer("status")
-            .defaultTo(1)
-            .notNullable();
+            table.integer("status").defaultTo(1).notNullable();
           })
 
           .createTable("category", (table) => {
             table.increments("uuid").primary();
             table.string("name").notNullable();
             table.timestamps(true, true);
-            table
-            .integer("status")
-            .defaultTo(1)
-            .notNullable();
+            table.integer("status").defaultTo(1).notNullable();
           })
 
           .createTable("supplier", (table) => {
@@ -82,11 +76,9 @@ const userDao =
             table.string("address").notNullable();
             table.string("phone_no").notNullable();
             table.string("mobile_no").notNullable();
+            table.string("tin_no").notNullable();
             table.timestamps(true, true);
-            table
-            .integer("status")
-            .defaultTo(1)
-            .notNullable();
+            table.integer("status").defaultTo(1).notNullable();
           })
 
           .createTable("product", (table) => {
@@ -117,10 +109,7 @@ const userDao =
               .onDelete("CASCADE");
 
             table.string("description").nullable();
-            table
-            .integer("status")
-            .defaultTo(1)
-            .notNullable();
+            table.integer("status").defaultTo(1).notNullable();
             table.timestamps(true, true);
             table
               .integer("added_by")
@@ -132,7 +121,6 @@ const userDao =
 
             table.index("item_code");
             table.index("price");
-            
           })
 
           .createTable("projects", (table) => {
@@ -151,8 +139,24 @@ const userDao =
               .onDelete("CASCADE");
           })
 
-          .createTable("purchase_request", (table) => {
+          .createTable("canvass", (table) => {
+            table.increments("uuid").primary();
+            table.date("date").notNullable();
+            table.string("item_code").notNullable();
+            table.string("remarks").nullable();
+            table.integer("quantity").notNullable();
+            table.double("total_price").notNullable();
+            table.string("canvasser").notNullable();
+            table.timestamps(true, true);
+            table
+              .foreign("item_code")
+              .references("item_code")
+              .inTable("product");
 
+            table.index("item_code");
+          })
+
+          .createTable("purchase_request", (table) => {
             table.increments("uuid").primary();
             table.date("date").notNullable();
             table.string("company_name").notNullable();
@@ -169,42 +173,11 @@ const userDao =
               .foreign("item_code")
               .references("item_code")
               .inTable("product");
-            table
-              .foreign("price")
-              .references("price")
-              .inTable("product");
+            table.foreign("price").references("price").inTable("product");
 
             table.index("item_code");
             table.index("price");
             table.index("total_amount");
-          })
-
-          .createTable("canvass", (table) => {
-            table.increments("uuid").primary();
-            table.date("date").notNullable();
-            table.string("company_name").notNullable();
-            table.string("address").notNullable();
-            table.string("tel_no").notNullable();
-            table.string("tin_no").notNullable();
-            table.string("item_code").notNullable();
-            table.string("description").nullable();
-            table.integer("quantity").notNullable();
-            table.double("price").notNullable();
-            table.double("total_amount").notNullable();
-            table.string("canvasser").notNullable();
-            table.timestamps(true, true);
-            table
-              .foreign("item_code")
-              .references("item_code")
-              .inTable("product");
-
-            table
-              .foreign("price")
-              .references("price")
-              .inTable("product");
-
-            table.index("item_code");
-            table.index("price");
           })
 
           .createTable("purchase_order", (table) => {
@@ -232,10 +205,7 @@ const userDao =
               .foreign("item_code")
               .references("item_code")
               .inTable("product");
-            table
-              .foreign("price")
-              .references("price")
-              .inTable("product");
+            table.foreign("price").references("price").inTable("product");
             table
               .foreign("total_amount")
               .references("total_amount")
