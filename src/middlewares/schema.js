@@ -95,10 +95,6 @@ const userDao =
             table.string("item_code").notNullable();
             table.double("price").notNullable();
             table
-            .string("rating")
-            .defaultTo("unrated")
-            .notNullable();
-            table
               .integer("brand_id")
               .unsigned()
               .notNullable()
@@ -136,7 +132,7 @@ const userDao =
 
             table.index("item_code");
             table.index("price");
-            table.index("rating");
+            
           })
 
           .createTable("projects", (table) => {
@@ -193,10 +189,6 @@ const userDao =
             table.string("item_code").notNullable();
             table.string("description").nullable();
             table.integer("quantity").notNullable();
-            table
-            .string("rating")
-            .defaultTo("unrated")
-            .notNullable();
             table.double("price").notNullable();
             table.double("total_amount").notNullable();
             table.string("canvasser").notNullable();
@@ -218,7 +210,6 @@ const userDao =
 
             table.index("item_code");
             table.index("price");
-            table.index("rating");
           })
 
           .createTable("purchase_order", (table) => {
