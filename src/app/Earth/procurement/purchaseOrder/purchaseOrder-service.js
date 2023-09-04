@@ -50,20 +50,38 @@ class PurchaseOrderService {
     }
   }
 
-  async getAll(req, res, next) {
+  // async getAll(req, res, next) {
+  //   try {
+  //     const store = new Store(req.db);
+  //     const logs = new Logs(req.db);
+  //     const uuid = req.params.uuid;
+  //     const result = await store.getByUUID(uuid);
+  //     if (!result) {
+  //       throw new NotFoundError("Data Not Found");
+  //     }
+  //     return res.status(200).send({
+  //       success: true,
+  //       data: result,
+  //     });
+  //   } catch (err) {
+  //     next(err);
+  //   }
+  // }
+
+  async getAllData (req, res, next) {
     try {
+      let result = [];
       const store = new Store(req.db);
-      const logs = new Logs(req.db);
-      const uuid = req.params.uuid;
-      const result = await store.getByUUID(uuid);
+      result = await store.getAll();
+
       if (!result) {
-        throw new NotFoundError("Data Not Found");
+        result = [];
       }
       return res.status(200).send({
         success: true,
         data: result,
       });
-    } catch (err) {
+    }catch (err) {
       next(err);
     }
   }

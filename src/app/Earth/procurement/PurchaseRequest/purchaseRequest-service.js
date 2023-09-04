@@ -27,6 +27,24 @@ class PurchaseRequestService {
     }
   }
 
+  async getAllData (req, res, next) {
+    try {
+      let result = [];
+      const store = new Store(req.db);
+      result = await store.getAll();
+
+      if (!result) {
+        result = [];
+      }
+      return res.status(200).send({
+        success: true,
+        data: result,
+      });
+    }catch (err) {
+      next(err);
+    }
+  } 
+
   // Get
   async get(req, res, next) {
     try {

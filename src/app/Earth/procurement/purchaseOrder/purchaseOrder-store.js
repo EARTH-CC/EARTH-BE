@@ -46,6 +46,13 @@ class PurchaseOrderStore {
     };
   }
 
+  async getAll() {
+    const results = await this.db(this.table)
+    .select("*")
+
+    return results;
+  }
+
   async update(uuid, body) {
     const validItem = await this.db("purchase_items")
       .where({
@@ -89,18 +96,18 @@ class PurchaseOrderStore {
     return results;
   }
 
-  async getAll() {
-    const results = await this.db(this.table)
-      .select()
-      .orderBy([{ column: this.cols.date, order: "desc" }]);
-    if (!results) {
-      return null;
-    }
-    const columnNames = await this.db(this.table)
-      .columnInfo()
-      .then((columns) => Object.keys(columns));
-    return results.length > 0 ? convertedResults : { columnNames };
-  }
+  // async getAll() {
+  //   const results = await this.db(this.table)
+  //     .select()
+  //     .orderBy([{ column: this.cols.date, order: "desc" }]);
+  //   if (!results) {
+  //     return null;
+  //   }
+  //   const columnNames = await this.db(this.table)
+  //     .columnInfo()
+  //     .then((columns) => Object.keys(columns));
+  //   return results.length > 0 ? convertedResults : { columnNames };
+  // }
 
   async delete(uuid) {
     const deletedRows = await this.db(this.table)

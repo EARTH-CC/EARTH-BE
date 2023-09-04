@@ -61,6 +61,8 @@ const userDao =
             table.string("name").notNullable();
             table.timestamps(true, true);
             table.integer("status").defaultTo(1).notNullable();
+
+            table.index("name");
           })
 
           .createTable("category", (table) => {
@@ -68,6 +70,8 @@ const userDao =
             table.string("name").notNullable();
             table.timestamps(true, true);
             table.integer("status").defaultTo(1).notNullable();
+
+            table.index("name");
           })
 
           .createTable("supplier", (table) => {
@@ -79,6 +83,8 @@ const userDao =
             table.string("tin_no").notNullable();
             table.timestamps(true, true);
             table.integer("status").defaultTo(1).notNullable();
+
+            table.index("name");
           })
 
           .createTable("product", (table) => {
@@ -154,6 +160,38 @@ const userDao =
               .inTable("product");
 
             table.index("item_code");
+            table.index("quantity");
+          })
+
+          .createTable("canvass_cart", (table) => {
+            table.increments("uuid").primary();
+            table.string("name").notNullable();
+            table.string("item_code").notNullable();
+            table.integer("quantity").notNullable();
+            table.double("price").notNullable();
+            table.timestamps(true, true);
+            table
+              .foreign("item_code")
+              .references("item_code")
+              .inTable("canvass");
+            table
+              .foreign("quantity")
+              .references("quantity")
+              .inTable("canvass");
+            table
+              .string("brand")
+              .notNullable()
+              .references("name")
+              .inTable("brand")
+            table
+              .string("supplier")
+              .notNullable()
+              .references("name")
+              .inTable("supplier")
+              
+
+            table.index("item_code");
+            table.index("quantity");
           })
 
           .createTable("purchase_request", (table) => {
