@@ -16,7 +16,11 @@ class ProductService {
       const data = req.body;
       const item_code = generateReferenceCode(data);
 
-      const result = await store.add({ ...data, item_code, ...{added_by: userId} });
+      const result = await store.add({
+        ...data,
+        item_code,
+        ...{ added_by: userId },
+      });
 
       res.status(201).json({
         message: "Product added successfully",
@@ -31,14 +35,23 @@ class ProductService {
   }
 
   async getPriceRange(req, res, next) {
-    
     try {
       const { startRange, endRange } = req.query;
       const store = new Store(req.db);
-
+  
+      const clampedStartRange = Math.min(
+        Math.max(parseInt(startRange, 10), 0),
+        999999
+      );
+  
+      const clampedEndRange = Math.min(
+        Math.max(parseInt(endRange, 10), 0),
+        999999
+      );
+  
       let priceRange;
-      if (startRange && endRange) {
-        priceRange = await store.getPrice(startRange, endRange);
+      if (!isNaN(clampedStartRange) && !isNaN(clampedEndRange)) {
+        priceRange = await store.getPrice(clampedStartRange, clampedEndRange);
       } else {
         priceRange = await store.getAll();
       }
