@@ -10,7 +10,7 @@ const service = new Service();
 const router = express.Router();
 
 //Add
-router.post("/purchaseRequest", db, asyncHandler(service.add));
+router.post("/purchaseRequest", db, asyncHandler(service.Add));
 
 //Get
 router.get("/purchaseRequest/get/:uuid", auth, db, asyncHandler(service.get));
@@ -21,6 +21,7 @@ router.put("/purchaseRequest/update/:uuid", db, asyncHandler(service.update));
 //Delete
 router.delete("/purchaseRequest/delete/:uuid", db, asyncHandler(service.delete));
 
+//Get All
 router.get("/purchaseRequest/get", db, asyncHandler(service.getAllData));
 
 //Export

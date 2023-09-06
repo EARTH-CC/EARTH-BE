@@ -127,6 +127,7 @@ const userDao =
 
             table.index("item_code");
             table.index("price");
+            table.index("name");
           })
 
           .createTable("projects", (table) => {
@@ -174,48 +175,46 @@ const userDao =
               .foreign("item_code")
               .references("item_code")
               .inTable("canvass");
-            table
-              .foreign("quantity")
-              .references("quantity")
-              .inTable("canvass");
+            table.foreign("quantity").references("quantity").inTable("canvass");
             table
               .string("brand")
               .notNullable()
               .references("name")
-              .inTable("brand")
+              .inTable("brand");
             table
               .string("supplier")
               .notNullable()
               .references("name")
-              .inTable("supplier")
-              
+              .inTable("supplier");
 
             table.index("item_code");
             table.index("quantity");
           })
 
+          
+
           .createTable("purchase_request", (table) => {
-            table.increments("uuid").primary();
-            table.date("date").notNullable();
-            table.string("company_name").notNullable();
-            table.string("address").notNullable();
+            table.increments("uuid"); 
+            table.string("company_name").notNullable().defaultTo("Earth");
             table.string("attention").notNullable();
             table.string("item_code").notNullable();
+            table
+              .string("item_name")
+              .notNullable()
+              .references("name")
+              .inTable("product");
             table.string("description").nullable();
             table.integer("quantity").notNullable();
             table.double("price").notNullable();
             table.double("total_amount").notNullable();
-            table.string("remarks").notNullable();
             table.timestamps(true, true);
             table
               .foreign("item_code")
               .references("item_code")
               .inTable("product");
             table.foreign("price").references("price").inTable("product");
-
             table.index("item_code");
             table.index("price");
-            table.index("total_amount");
           })
 
           .createTable("purchase_order", (table) => {
@@ -244,14 +243,9 @@ const userDao =
               .references("item_code")
               .inTable("product");
             table.foreign("price").references("price").inTable("product");
-            table
-              .foreign("total_amount")
-              .references("total_amount")
-              .inTable("purchase_request");
 
             table.index("item_code");
             table.index("price");
-            table.index("total_amount");
           })
 
           .createTable("logs", (table) => {

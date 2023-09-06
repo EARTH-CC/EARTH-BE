@@ -9,37 +9,73 @@ class PurchaseRequestStore {
   }
 
   async add(data) {
-    const validItem = await this.db("product")
-      .where({
-        item_code: data.item_code,
-      })
-      .first();
-    if (!validItem) {
-      throw new Error("Invalid item reference");
+    // Check if "data" is an array
+    if (!Array.isArray(data.items)) {
+      throw new Error("Invalid request format");
     }
 
-    const total_amount = data.quantity * validItem.price;
+    const insertedItems = [];
+    let totalAmount = 0;
+    let purchaseRequestUUID; // Declare a variable to store the generated UUID
 
-    const newRequest = {
-      date: data.date,
-      company_name: data.company_name,
-      address: data.address,
-      attention: data.attention,
-      item_code: data.item_code,
-      description: data.description,
-      quantity: data.quantity,
-      price: validItem.price,
-      total_amount: total_amount,
-      remarks: data.remarks,
+    for (const item of data.items) {
+      const validItem = await this.db("product")
+        .where({
+          item_code: item.item_code,
+        })
+        .first();
+
+      if (!validItem) {
+        throw new Error("Invalid item reference");
+      }
+
+      // Calculate the total_amount for each item and accumulate it
+      const itemTotalAmount = item.quantity * item.price;
+
+      // Calculate the item price
+      const itemPrice = itemTotalAmount / item.quantity;
+
+      // Accumulate the total item price
+      totalAmount += itemTotalAmount;
+
+      // Prepare the new request object for the current item
+      const newRequest = {
+        attention: item.attention,
+        item_name: item.item_name,
+        item_code: item.item_code,
+        description: item.description,
+        quantity: item.quantity,
+        price: itemPrice, // Use itemPrice as the price per item
+        total_amount: itemTotalAmount,
+      };
+
+      // Insert the current item into the database and retrieve the generated UUID
+      const [insertedItemId] = await this.db(this.table).insert(
+        newRequest,
+        "uuid"
+      );
+
+      insertedItems.push({
+        ...newRequest,
+        uuid: insertedItemId, // Assign the generated UUID to the item
+      });
+
+      // Store the generated UUID from the first inserted item
+      if (!purchaseRequestUUID) {
+        purchaseRequestUUID = insertedItemId;
+      }
     }
 
-    const uuid = await this.db(this.table).insert(newRequest);
+    insertedItems.forEach((item) => {
+      item.uuid = purchaseRequestUUID;
+    });
 
+    // Return the totalAmount along with the response
     return {
-      uid: uuid[0],
-      ...newRequest,
+      items: insertedItems,
+      total_price: totalAmount,
+      uuid: purchaseRequestUUID, // Include the UUID in the response
     };
-    
   }
 
   async update(uuid, body) {
@@ -78,9 +114,8 @@ class PurchaseRequestStore {
     return updatedRows;
   }
 
-  async getAll () {
-    const results = await this.db(this.table)
-    .select("*")
+  async getAll() {
+    const results = await this.db(this.table).select("*");
 
     return results;
   }

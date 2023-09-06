@@ -8,22 +8,36 @@ class PurchaseRequestService {
   constructor(store) {}
 
   // Add
-  async add(req, res, next) {
+  async Add(req, res, next) {
     try {
-      const store = new Store(req.db);
-      const logs = new Logs(req.db);
-      const data = req.body;
+        const store = new Store(req.db);
+        const logs = new Logs(req.db);
+        const data = req.body; // Pass the entire request body
 
-      const newProject = await store.add(data);
+        const result = await store.add(data);
 
-      res
-        .status(201)
-        .json({ message: "Purchase Request added successfully",
-                uuid: userId,
-                module: moduleName, 
-                data: data });
+        const total_price = result.items.reduce(
+            (total, item) => total + item.total_amount,
+            0
+        );
+
+        const response = {
+            message: "Purchase Request added successfully",
+            uuid: result.uuid, // Pass the unique "uuid" from the result
+            module: "Purchase Request",
+            data: {
+                items: result.items.map((item) => ({
+                    ...item,
+                    total_amount: item.quantity * item.price,
+                    uuid: result.uuid, // Assign the same UUID to each item
+                })),
+                total_price: total_price,
+            },
+        };
+
+        res.status(201).json(response); // Send the response back to the client
     } catch (err) {
-      next(err);
+        next(err);
     }
   }
 
