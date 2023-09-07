@@ -124,7 +124,6 @@ const userDao =
               .references("uuid") // Change this to "uuid" to match the primary key of "users" table
               .inTable("users")
               .onDelete("CASCADE");
-
             table.index("item_code");
             table.index("price");
             table.index("name");
@@ -168,27 +167,15 @@ const userDao =
             table.increments("uuid").primary();
             table.string("name").notNullable();
             table.string("item_code").notNullable();
-            table.integer("quantity").notNullable();
+            table.integer("quantity").defaultTo(1).notNullable();
             table.double("price").notNullable();
+            table.string("description").nullable();
             table.timestamps(true, true);
             table
               .foreign("item_code")
               .references("item_code")
-              .inTable("canvass");
-            table.foreign("quantity").references("quantity").inTable("canvass");
-            table
-              .string("brand")
-              .notNullable()
-              .references("name")
-              .inTable("brand");
-            table
-              .string("supplier")
-              .notNullable()
-              .references("name")
-              .inTable("supplier");
-
+              .inTable("product");
             table.index("item_code");
-            table.index("quantity");
           })
 
           
@@ -271,6 +258,7 @@ const userDao =
                 "Products",
                 "Purchase Request",
                 "Canvass",
+                "Cart",
                 "Purchase Order",
                 "Categories",
                 "Suppliers",
