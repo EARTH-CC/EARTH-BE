@@ -13,31 +13,28 @@ class PurchaseRequestStore {
     if (!Array.isArray(data.items)) {
       throw new Error("Invalid request format");
     }
-
+  
     const insertedItems = [];
     let totalAmount = 0;
-    let purchaseRequestUUID; // Declare a variable to store the generated UUID
-
+    let purchaseRequestUUID;
+  
     for (const item of data.items) {
       const validItem = await this.db("product")
         .where({
           item_code: item.item_code,
         })
         .first();
-
+  
       if (!validItem) {
         throw new Error("Invalid item reference");
       }
-
+  
       // Calculate the total_amount for each item and accumulate it
       const itemTotalAmount = item.quantity * item.price;
-
+  
       // Calculate the item price
       const itemPrice = itemTotalAmount / item.quantity;
-
-      // Accumulate the total item price
-      totalAmount += itemTotalAmount;
-
+  
       // Prepare the new request object for the current item
       const newRequest = {
         attention: item.attention,
@@ -47,34 +44,25 @@ class PurchaseRequestStore {
         quantity: item.quantity,
         price: itemPrice, // Use itemPrice as the price per item
         total_amount: itemTotalAmount,
+        pr_uuid: validItem.uuid, // Assign the 'pr_uuid' based on the product table
       };
+  
+      // Insert the current item into the database
+      await this.db(this.table).insert(newRequest);
+  
+      insertedItems.push(newRequest);
 
-      // Insert the current item into the database and retrieve the generated UUID
-      const [insertedItemId] = await this.db(this.table).insert(
-        newRequest,
-        "uuid"
-      );
-
-      insertedItems.push({
-        ...newRequest,
-        uuid: insertedItemId, // Assign the generated UUID to the item
-      });
-
-      // Store the generated UUID from the first inserted item
       if (!purchaseRequestUUID) {
-        purchaseRequestUUID = insertedItemId;
-      }
+        purchaseRequestUUID = validItem.uuid;
     }
 
-    insertedItems.forEach((item) => {
-      item.uuid = purchaseRequestUUID;
-    });
-
+    }
+  
     // Return the totalAmount along with the response
     return {
       items: insertedItems,
       total_price: totalAmount,
-      uuid: purchaseRequestUUID, // Include the UUID in the response
+      uuid: purchaseRequestUUID,
     };
   }
 

@@ -212,6 +212,9 @@ class ProductService {
 function generateReferenceCode(data) {
   const currentYear = new Date().getFullYear();
   const paddedCounter = currentCounter.toString().padStart(4, "0");
+
+  currentCounter++;
+  
   return `${data.brand_id}${data.category_id}${data.supplier_id}${data.name
     .substring(0, 2)
     .toUpperCase()}${currentYear}${paddedCounter}`;

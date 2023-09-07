@@ -1,7 +1,7 @@
 const { query } = require("express");
 const canvassTableConfig = require("../../../../configuration/earthConfig/canvassTableConfig");
 
-class PurchaseRequestStore {
+class CanvassStore {
   constructor(db) {
     this.db = db;
     this.table = canvassTableConfig.tableName;
@@ -239,4 +239,4 @@ class PurchaseRequestStore {
 //   return lastDate;
 // }
 
-module.exports = PurchaseRequestStore;
+module.exports = CanvassStore;

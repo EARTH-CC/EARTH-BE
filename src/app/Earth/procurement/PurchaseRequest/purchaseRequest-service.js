@@ -29,7 +29,6 @@ class PurchaseRequestService {
                 items: result.items.map((item) => ({
                     ...item,
                     total_amount: item.quantity * item.price,
-                    uuid: result.uuid, // Assign the same UUID to each item
                 })),
                 total_price: total_price,
             },

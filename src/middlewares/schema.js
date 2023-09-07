@@ -194,7 +194,7 @@ const userDao =
           
 
           .createTable("purchase_request", (table) => {
-            table.increments("uuid"); 
+            table.increments("uuid").primary();
             table.string("company_name").notNullable().defaultTo("Earth");
             table.string("attention").notNullable();
             table.string("item_code").notNullable();
@@ -207,6 +207,13 @@ const userDao =
             table.integer("quantity").notNullable();
             table.double("price").notNullable();
             table.double("total_amount").notNullable();
+            table
+              .integer("pr_uuid")
+              .unsigned()
+              .notNullable()
+              .references("uuid")
+              .inTable("product")
+              .onDelete("RESTRICT");
             table.timestamps(true, true);
             table
               .foreign("item_code")
