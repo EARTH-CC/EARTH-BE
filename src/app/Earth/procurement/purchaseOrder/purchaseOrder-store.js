@@ -9,46 +9,66 @@ class PurchaseOrderStore {
   }
 
   async add(data) {
-    const validItem = await this.db("product")
-      .where({
-        item_code: data.item_code,
-      })
-      .first();
-  
-    if (!validItem) {
-      throw new Error("Invalid item references");
+    if (!Array.isArray(data.items)) {
+      throw new Error("Invalid request format");
     }
-  
-    const total_amount = data.quantity * validItem.price;
-  
-    const insertedData = {
-      date: data.date,
-      due_date: data.due_date,
-      purchase_request_no: data.purchase_request_no,
-      company_name_supplier: data.company_name_supplier,
-      address: data.address,
-      terms_of_agreement: data.terms_of_agreement,
-      item_code: data.item_code,
-      description: data.description,
-      quantity: data.quantity,
-      price: validItem.price,
-      total_amount: total_amount,
-      remarks: data.remarks,
-    };
-  
-    const uuid = await this.db(this.table).insert(insertedData);
-  
+
+    const insertedItems = [];
+    let totalAmount = 0;
+    let purchaseOrderUUID;
+    const companyNameSupplier = data.company_name_supplier;
+
+    for (const item of data.items) {
+      const validItem = await this.db("product")
+        .where({
+          item_code: item.item_code,
+        })
+        .first();
+
+      if (!validItem) {
+        throw new Error("Invalid item reference");
+      }
+
+      const itemTotalAmount = item.quantity * item.price;
+
+      const itemPrice = itemTotalAmount / item.quantity;
+
+      const newOrder = {
+        date: item.date,
+        due_date: item.due_date,
+        address: item.address,
+        terms_of_agreement: item.terms_of_agreement,
+        company_name_supplier: companyNameSupplier,
+        item_code: item.item_code,
+        item_name: item.item_name,
+        description: validItem.description,
+        quantity: item.quantity,
+        price: itemPrice, // Use itemPrice as the price per item
+        total_amount: itemTotalAmount,
+      };
+
+      await this.db(this.table).insert(newOrder);
+
+      insertedItems.push({
+        ...newOrder,
+        company_name_supplier: companyNameSupplier,
+      });
+
+      if (!purchaseOrderUUID) {
+        purchaseOrderUUID = validItem.uuid;
+      }
+    }
+
     return {
-      uid: uuid[0],
-      ...insertedData,
-      price: validItem.price,
-      total_amount: total_amount,
+      items: insertedItems,
+      total_price: totalAmount,
+      uuid: purchaseOrderUUID,
+      company_name_supplier: companyNameSupplier,
     };
   }
 
   async getAll() {
-    const results = await this.db(this.table)
-    .select("*")
+    const results = await this.db(this.table).select("*");
 
     return results;
   }

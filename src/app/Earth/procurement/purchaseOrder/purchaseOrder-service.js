@@ -14,18 +14,28 @@ class PurchaseOrderService {
       const logs = new Logs(req.db);
       const data = req.body;
 
-      const newOrder = await store.add(data);
+      const result = await store.add(data);
 
-      data.price = newOrder.price;
-      data.total_amount = newOrder.total_amount;
+      const total_price = result.items.reduce(
+        (total, item) => total + item.total_amount,
+        0
+      );
 
-      res
-        .status(201)
-        .json({ message: "Order added successfully",
-                uuid: userId,
-                module: moduleName, 
-                data: data,
-              });
+      const response = {
+        message: "Purchase Order added successfully",
+        uuid: result.uuid, // Pass the unique "uuid" from the result
+        company_name_supplier: result.company_name_supplier,
+        module: "Purchase Order",
+        data: {
+          items: result.items.map((item) => ({
+            ...item,
+            total_amount: item.quantity * item.price,
+          })),
+          total_price: total_price,
+        },
+      };
+
+      res.status(201).json(response); // Send the response back to the client
     } catch (err) {
       next(err);
     }
@@ -68,7 +78,7 @@ class PurchaseOrderService {
   //   }
   // }
 
-  async getAllData (req, res, next) {
+  async getAllData(req, res, next) {
     try {
       let result = [];
       const store = new Store(req.db);
@@ -81,7 +91,7 @@ class PurchaseOrderService {
         success: true,
         data: result,
       });
-    }catch (err) {
+    } catch (err) {
       next(err);
     }
   }

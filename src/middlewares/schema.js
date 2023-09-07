@@ -127,6 +127,7 @@ const userDao =
             table.index("item_code");
             table.index("price");
             table.index("name");
+            table.index("description");
           })
 
           .createTable("projects", (table) => {
@@ -181,7 +182,7 @@ const userDao =
           
 
           .createTable("purchase_request", (table) => {
-            table.increments("uuid").primary();
+            table.increments("uuid");
             table.string("company_name").notNullable().defaultTo("Earth");
             table.string("attention").notNullable();
             table.string("item_code").notNullable();
@@ -219,19 +220,21 @@ const userDao =
             table.string("address").notNullable();
             table.string("terms_of_agreement").notNullable();
             table.string("item_code").notNullable();
+            table
+            .string("item_name")
+            .notNullable()
+            .references("name")
+            .inTable("product")
             table.string("description").nullable();
             table.integer("quantity").notNullable();
             table.double("price").notNullable();
             table.double("total_amount").notNullable();
-            table.string("remarks").notNullable();
+            table.string("remarks").nullable();
             table.timestamps(true, true);
             table
-              .integer("purchase_request_no")
-              .unsigned()
-              .notNullable()
-              .references("uuid")
-              .inTable("purchase_request")
-              .onDelete("CASCADE");
+            .foreign("description")
+            .references("description")
+            .inTable("product");
             table
               .foreign("item_code")
               .references("item_code")
@@ -240,6 +243,7 @@ const userDao =
 
             table.index("item_code");
             table.index("price");
+            table.index("description");
           })
 
           .createTable("logs", (table) => {
