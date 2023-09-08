@@ -49,7 +49,7 @@ class CartStore {
   async getCartPrice() {
     try {
       const result = await this.db(this.table)
-        .sum(`${this.cols.price} as total_price`)
+        .select(this.db.raw("SUM(price * quantity) as total_price"))
         .count(`${this.cols.id} as items`)
         .first();
       if (result && result.total_price !== null && result.items !== null) {

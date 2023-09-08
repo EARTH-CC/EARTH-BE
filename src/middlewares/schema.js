@@ -184,7 +184,7 @@ const userDao =
           .createTable("purchase_request", (table) => {
             table.increments("uuid");
             table.string("company_name").notNullable().defaultTo("Earth");
-            table.string("attention").notNullable();
+            table.string("attention").nullable();
             table.string("item_code").notNullable();
             table
               .string("item_name")
