@@ -21,7 +21,7 @@ class PurchaseRequestService {
       const requestResult = await store.add({
         remarks: data.remarks,
         attention: data.attention,
-        items: data.items.length,
+        item_count: data.items.length,
         pr_code: prRef_code,
         total_amount: itemsResult,
       });

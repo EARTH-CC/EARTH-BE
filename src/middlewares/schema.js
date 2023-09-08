@@ -233,7 +233,7 @@ const userDao =
               .string("address")
               .notNullable()
               .defaultTo("3rd planet, Solar System, Milky Way Galaxy");
-            table.integer("items").notNullable();
+            table.integer("item_count").notNullable();
             table.double("total_amount");
             table.string("remarks").nullable();
             table.string("attention").nullable();
