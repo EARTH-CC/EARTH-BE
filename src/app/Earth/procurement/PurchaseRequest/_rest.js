@@ -24,6 +24,10 @@ router.delete("/purchaseRequest/delete/:uuid", db, asyncHandler(service.delete))
 //Get All
 router.get("/purchaseRequest/get", db, asyncHandler(service.getAllData));
 
+
+// Get All Items
+router.get("/purchaseRequest/getAllItems", db, asyncHandler(service.getAllItems));
+
 //Export
 // router.get("/project/export", db, asyncHandler(service.exportDataToExcel));
 

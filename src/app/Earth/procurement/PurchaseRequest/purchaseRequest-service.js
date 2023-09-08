@@ -54,6 +54,38 @@ class PurchaseRequestService {
     }
   }
 
+
+  //eto yung sa get all items
+  async getAllItems(req, res, next) {
+    try {
+      const { prRef_code } = req.query; // Use prRef_code if it matches your route definition
+  
+      if (!prRef_code) {
+        // Handle the case where prRef_code is missing in the request
+        return res.status(400).json({ error: 'prRef_code is required' });
+      }
+  
+      const itemStore = new ItemStore(req.db);
+      // const store = new Store(req.db);
+      // const request = await store.getAll();
+      const items = await itemStore.getAll(prRef_code);
+  
+      if (items.length === 0) {
+        // Handle the case where no items were found 
+        return res.status(404).json({ error: 'No items found for prRef_code' });
+      }
+  
+      // Send the items as a response
+      return res.status(200).send({
+        success: true,
+        pr_code: prRef_code, 
+        data: items,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
   // Get
   async get(req, res, next) {
     try {

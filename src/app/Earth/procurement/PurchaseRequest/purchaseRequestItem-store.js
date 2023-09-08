@@ -82,6 +82,37 @@ class CartStore {
       throw error;
     }
   }
+
+  //get all items
+  async getAll(prRef_code) {
+    try {
+      const results = await this.db
+        .select(
+          'purchase_request_item.created_at as date',
+          'purchase_request_item.item_code',
+          'purchase_request_item.pr_code',
+          'purchase_request_item.price',
+          'purchase_request_item.quantity',
+          'purchase_request_item.description',
+          'product.name',
+          'brand.name as brand_name',
+          'supplier.name as supplier_name',
+          'category.name as category_name'
+        )
+        .from('purchase_request_item')
+        .join('product', 'purchase_request_item.item_code', '=', 'product.item_code')
+        .join('brand', 'purchase_request_item.brand_id', '=', 'brand.uuid')
+        .join('supplier', 'purchase_request_item.supplier_id', '=', 'supplier.uuid')
+        .join('category', 'purchase_request_item.category_id', '=', 'category.uuid')
+        .where('purchase_request_item.pr_code', 'like', `%${prRef_code}%`);
+  
+      return results;
+    } catch (error) {
+      console.error("Error in getAll:", error);
+      throw error;
+    }
+  }
+  
 }
 
 module.exports = CartStore;
