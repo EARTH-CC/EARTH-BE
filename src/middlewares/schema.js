@@ -179,37 +179,65 @@ const userDao =
             table.index("item_code");
           })
 
-          
-
-          .createTable("purchase_request", (table) => {
-            table.increments("uuid");
-            table.string("company_name").notNullable().defaultTo("Earth");
-            table.string("attention").nullable();
+          .createTable("purchase_request_item", (table) => {
+            table.increments("uuid").primary();
             table.string("item_code").notNullable();
-            table
-              .string("item_name")
-              .notNullable()
-              .references("name")
-              .inTable("product");
-            table.string("description").nullable();
-            table.integer("quantity").notNullable();
+            table.string("pr_code").notNullable();
             table.double("price").notNullable();
-            table.double("total_amount").notNullable();
+            table.integer("quantity").notNullable();
             table
-              .integer("pr_uuid")
+              .integer("product_id")
               .unsigned()
               .notNullable()
               .references("uuid")
               .inTable("product")
               .onDelete("RESTRICT");
+            table
+              .integer("brand_id")
+              .unsigned()
+              .notNullable()
+              .references("uuid")
+              .inTable("brand")
+              .onDelete("RESTRICT");
+            table
+              .integer("supplier_id")
+              .unsigned()
+              .notNullable()
+              .references("uuid")
+              .inTable("supplier")
+              .onDelete("RESTRICT");
+            table
+              .integer("category_id")
+              .unsigned()
+              .notNullable()
+              .references("uuid")
+              .inTable("category")
+              .onDelete("RESTRICT");
+            table.string("description").nullable();
             table.timestamps(true, true);
+
+            table.foreign("price").references("price").inTable("product");
             table
               .foreign("item_code")
               .references("item_code")
               .inTable("product");
-            table.foreign("price").references("price").inTable("product");
-            table.index("item_code");
             table.index("price");
+            table.index("item_code");
+          })
+
+          .createTable("purchase_request", (table) => {
+            table.increments("uuid").primary();
+            table.string("pr_code").notNullable();
+            table.string("company_name").notNullable().defaultTo("Earth");
+            table
+              .string("address")
+              .notNullable()
+              .defaultTo("3rd planet, Solar System, Milky Way Galaxy");
+            table.integer("items").notNullable();
+            table.double("total_amount");
+            table.string("remarks").nullable();
+            table.string("attention").nullable();
+            table.timestamps(true, true);
           })
 
           .createTable("purchase_order", (table) => {
@@ -221,10 +249,10 @@ const userDao =
             table.string("terms_of_agreement").notNullable();
             table.string("item_code").notNullable();
             table
-            .string("item_name")
-            .notNullable()
-            .references("name")
-            .inTable("product")
+              .string("item_name")
+              .notNullable()
+              .references("name")
+              .inTable("product");
             table.string("description").nullable();
             table.integer("quantity").notNullable();
             table.double("price").notNullable();
@@ -232,9 +260,9 @@ const userDao =
             table.string("remarks").nullable();
             table.timestamps(true, true);
             table
-            .foreign("description")
-            .references("description")
-            .inTable("product");
+              .foreign("description")
+              .references("description")
+              .inTable("product");
             table
               .foreign("item_code")
               .references("item_code")

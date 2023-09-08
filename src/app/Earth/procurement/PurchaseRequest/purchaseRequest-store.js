@@ -9,62 +9,82 @@ class PurchaseRequestStore {
   }
 
   async add(data) {
-    // Check if "data" is an array
-    if (!Array.isArray(data.items)) {
-      throw new Error("Invalid request format");
+    try {
+      return await this.db(this.table).insert({
+        pr_code: data.pr_code,
+        company_name: data.company_name,
+        address: data.address,
+        items: data.items,
+        total_amount: data.total_amount,
+        remarks: data.remarks,
+        attention: data.attention,
+      });
+    } catch (error) {
+      return error;
     }
-  
-    const insertedItems = [];
-    let totalAmount = 0;
-    let purchaseRequestUUID;
-  
-    for (const item of data.items) {
-      const validItem = await this.db("product")
-        .where({
-          item_code: item.item_code,
-        })
-        .first();
-  
-      if (!validItem) {
-        throw new Error("Invalid item reference");
-      }
-  
-      // Calculate the total_amount for each item and accumulate it
-      const itemTotalAmount = item.quantity * item.price;
-  
-      // Calculate the item price
-      const itemPrice = itemTotalAmount / item.quantity;
-  
-      // Prepare the new request object for the current item
-      const newRequest = {
-        attention: item.attention,
-        item_name: item.item_name,
-        item_code: item.item_code,
-        description: item.description,
-        quantity: item.quantity,
-        price: itemPrice, // Use itemPrice as the price per item
-        total_amount: itemTotalAmount,
-        pr_uuid: validItem.uuid, // Assign the 'pr_uuid' based on the product table
-      };
-  
-      // Insert the current item into the database
-      await this.db(this.table).insert(newRequest);
-  
-      insertedItems.push(newRequest);
-
-      if (!purchaseRequestUUID) {
-        purchaseRequestUUID = validItem.uuid;
-    }
-
-    }
-  
-    // Return the totalAmount along with the response
-    return {
-      items: insertedItems,
-      total_price: totalAmount,
-      uuid: purchaseRequestUUID,
-    };
   }
+
+  async getAll() {
+    const results = await this.db(this.table).select();
+    return results;
+  }
+
+  // async add(data) {
+  //   // Check if "data" is an array
+  //   if (!Array.isArray(data.items)) {
+  //     throw new Error("Invalid request format");
+  //   }
+
+  //   const insertedItems = [];
+  //   let totalAmount = 0;
+  //   let purchaseRequestUUID;
+
+  //   for (const item of data.items) {
+  //     const validItem = await this.db("product")
+  //       .where({
+  //         item_code: item.item_code,
+  //       })
+  //       .first();
+
+  //     if (!validItem) {
+  //       throw new Error("Invalid item reference");
+  //     }
+
+  //     // Calculate the total_amount for each item and accumulate it
+  //     const itemTotalAmount = item.quantity * item.price;
+
+  //     // Calculate the item price
+  //     const itemPrice = itemTotalAmount / item.quantity;
+
+  //     // Prepare the new request object for the current item
+  //     const newRequest = {
+  //       attention: item.attention,
+  //       item_name: item.item_name,
+  //       item_code: item.item_code,
+  //       description: item.description,
+  //       quantity: item.quantity,
+  //       price: itemPrice, // Use itemPrice as the price per item
+  //       total_amount: itemTotalAmount,
+  //       pr_uuid: validItem.uuid, // Assign the 'pr_uuid' based on the product table
+  //     };
+
+  //     // Insert the current item into the database
+  //     await this.db(this.table).insert(newRequest);
+
+  //     insertedItems.push(newRequest);
+
+  //     if (!purchaseRequestUUID) {
+  //       purchaseRequestUUID = validItem.uuid;
+  //     }
+  //   }
+
+  //   Return the totalAmount along with the response
+  //   return {
+  //     items: insertedItems,
+  //     total_price: totalAmount,
+  //     uuid: purchaseRequestUUID,
+  //   };
+  // }
 
   async update(uuid, body) {
     const validItem = await this.db("purchase_items")
@@ -100,12 +120,6 @@ class PurchaseRequestStore {
       .select("*")
       .first();
     return updatedRows;
-  }
-
-  async getAll() {
-    const results = await this.db(this.table).select("*");
-
-    return results;
   }
 
   async getByUUID(uuid) {
