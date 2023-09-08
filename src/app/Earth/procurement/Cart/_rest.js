@@ -10,6 +10,12 @@ const router = express.Router();
 //Add
 router.post("/cart", db, asyncHandler(service.add));
 
+//Get All
+router.get("/cart/get", db, asyncHandler(service.getAllCart));
+
+//Get Cart Price
+router.get("/cart/price", db, asyncHandler(service.getCartPrice));
+
 //Get
 router.get("/cart/get/:uuid", auth, db, asyncHandler(service.get));
 
@@ -19,7 +25,6 @@ router.put("/cart/update/:uuid", db, asyncHandler(service.update));
 //Delete
 router.delete("/cart/delete/:uuid", db, asyncHandler(service.delete));
 
-//Export
-// router.get("/project/export", db, asyncHandler(service.exportDataToExcel));
+
 
 module.exports = router;

@@ -11,19 +11,56 @@ class CartStore {
   async add(data) {
     return await this.db(this.table).insert({
       name: data.name,
+      price: data.price,
       item_code: data.item_code,
       quantity: data.quantity,
-      price: data.price,
       description: data.description,
     });
   }
 
-  async getPrice(startRange, endRange) {
-    const products = await this.db(this.table)
-      .select("*")
-      .whereBetween("price", [startRange, endRange]);
+  async getAllCart() {
+    try {
+      const results = await this.db
+        .select(
+          "canvass_cart.uuid",
+          "canvass_cart.name",
+          "canvass_cart.item_code",
+          "canvass_cart.quantity",
+          "canvass_cart.price",
+          "canvass_cart.description",
+          "canvass_cart.created_at",
+          "canvass_cart.updated_at",
+          "brand.name as brand",
+          "supplier.name as supplier"
+        )
+        .from("canvass_cart")
+        .join("product", "product.item_code", "=", "canvass_cart.item_code")
+        .join("brand", "product.brand_id", "=", "brand.uuid")
+        .join("supplier", "product.supplier_id", "=", "supplier.uuid");
 
-    return products;
+      return results;
+    } catch (error) {
+      // Handle any potential errors here
+      console.error("Error in getAll:", error);
+      throw error; // You can choose to rethrow the error or handle it differently
+    }
+  }
+
+  async getCartPrice() {
+    try {
+      const result = await this.db(this.table)
+        .sum(`${this.cols.price} as total_price`)
+        .count(`${this.cols.id} as items`)
+        .first();
+      if (result && result.total_price !== null && result.items !== null) {
+        return result;
+      } else {
+        return { total_price: 0, items: 0 };
+      }
+    } catch (error) {
+      console.error("Error calculating cart price:", error);
+      throw error;
+    }
   }
 
   async update(uuid, body) {
