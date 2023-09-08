@@ -19,8 +19,7 @@ class PurchaseRequestService {
       const prRef_code = generatePrCode(data.items);
       const itemsResult = await itemStore.add(data.items, prRef_code);
       const requestResult = await store.add({
-        remarks: data.remarks,
-        attention: data.attention,
+        ...data,
         item_count: data.items.length,
         pr_code: prRef_code,
         total_amount: itemsResult,

@@ -34,7 +34,6 @@ class CartStore {
       pr_code: prRef_code,
     }));
     await this.db(this.table).insert(dataWithPrCode);
-    console.log(totalAmountSum);
     return totalAmountSum;
   }
 

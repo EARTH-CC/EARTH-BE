@@ -171,6 +171,7 @@ const userDao =
             table.integer("quantity").defaultTo(1).notNullable();
             table.double("price").notNullable();
             table.string("description").nullable();
+            table.integer("status").defaultTo(1).notNullable();
             table.timestamps(true, true);
             table
               .foreign("item_code")

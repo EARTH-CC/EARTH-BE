@@ -36,7 +36,8 @@ class CartStore {
         .from("canvass_cart")
         .join("product", "product.item_code", "=", "canvass_cart.item_code")
         .join("brand", "product.brand_id", "=", "brand.uuid")
-        .join("supplier", "product.supplier_id", "=", "supplier.uuid");
+        .join("supplier", "product.supplier_id", "=", "supplier.uuid")
+        .where("canvass_cart.status", "=", 1);
 
       return results;
     } catch (error) {
@@ -51,10 +52,18 @@ class CartStore {
       const result = await this.db(this.table)
         .select(this.db.raw("SUM(price * quantity) as total_price"))
         .count(`${this.cols.id} as items`)
+        .where("status", "=", 1)
         .first();
-      if (result && result.total_price !== null && result.items !== null) {
-        return result;
+
+      if (result !== undefined && result !== null) {
+        // Check if either total_price or items is not null
+        if (result.total_price !== null && result.items !== null) {
+          return result;
+        } else {
+          return { total_price: 0, items: 0 };
+        }
       } else {
+        // Handle the case where the table is empty
         return { total_price: 0, items: 0 };
       }
     } catch (error) {

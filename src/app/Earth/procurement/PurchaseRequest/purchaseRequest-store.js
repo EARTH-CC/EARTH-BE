@@ -14,7 +14,7 @@ class PurchaseRequestStore {
         pr_code: data.pr_code,
         company_name: data.company_name,
         address: data.address,
-        items: data.items,
+        item_count: data.item_count,
         total_amount: data.total_amount,
         remarks: data.remarks,
         attention: data.attention,
