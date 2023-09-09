@@ -1,18 +1,13 @@
 module.exports = {
-    tableName: 'purchase_order',
-    columnNames: {
-      id: 'uuid',
-      date: 'date',
-      dueDate: 'due_date',
-      companyName: 'company_name_supplier',
-      address: 'address',
-      termsOfAgreement: 'terms_of_agreement',
-      itemCode: 'item_code',
-      itemName: 'item_name',
-      description: 'description',
-      quantity: 'quantity',
-      price: 'price',
-      totalAmount: 'total_amount',
-      remarks: 'remarks'
-    },
-  };
+  tableName: "purchase_request",
+  columnNames: {
+    id: "uuid",
+    poCode: "po_code",
+    companyName: "company_name",
+    address: "address",
+    items: "items",
+    totalAmount: "total_amount",
+    remarks: "remarks",
+    date: "created_at",
+  },
+};

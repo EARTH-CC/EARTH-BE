@@ -6,8 +6,8 @@ const knex = require("knex")({
     user: "root",
     // password: "1234",
     // password: "philfilda",
-    password: "philfida",
-    // password: "macmac",
+    // password: "philfida",
+    password: "macmac",
     database: "earth",
   },
   pool: {

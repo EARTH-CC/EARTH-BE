@@ -10,7 +10,7 @@ const service = new Service();
 const router = express.Router();
 
 //Add
-router.post("/purchaseOrder", db, asyncHandler(service.add));
+router.post("/purchaseOrder", db, asyncHandler(service.Add));
 
 //Get
 router.get("/purchaseOrder/get/:uuid", auth, db, asyncHandler(service.get));

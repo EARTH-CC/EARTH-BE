@@ -8,64 +8,82 @@ class PurchaseOrderStore {
     this.cols = purchaseOrderTableConfig.columnNames;
   }
 
+  // async add(data) {
+  //   if (!Array.isArray(data.items)) {
+  //     throw new Error("Invalid request format");
+  //   }
+
+  //   const insertedItems = [];
+  //   let totalAmount = 0;
+  //   let purchaseOrderUUID;
+  //   const companyNameSupplier = data.company_name_supplier;
+
+  //   for (const item of data.items) {
+  //     const validItem = await this.db("product")
+  //       .where({
+  //         item_code: item.item_code,
+  //       })
+  //       .first();
+
+  //     if (!validItem) {
+  //       throw new Error("Invalid item reference");
+  //     }
+
+  //     const itemTotalAmount = item.quantity * item.price;
+
+  //     const itemPrice = itemTotalAmount / item.quantity;
+
+  //     const newOrder = {
+  //       date: item.date,
+  //       due_date: item.due_date,
+  //       address: item.address,
+  //       terms_of_agreement: item.terms_of_agreement,
+  //       company_name_supplier: companyNameSupplier,
+  //       item_code: item.item_code,
+  //       item_name: item.item_name,
+  //       description: validItem.description,
+  //       quantity: item.quantity,
+  //       price: itemPrice, // Use itemPrice as the price per item
+  //       total_amount: itemTotalAmount,
+  //     };
+
+  //     await this.db(this.table).insert(newOrder);
+
+  //     insertedItems.push({
+  //       ...newOrder,
+  //       company_name_supplier: companyNameSupplier,
+  //     });
+
+  //     if (!purchaseOrderUUID) {
+  //       purchaseOrderUUID = validItem.uuid;
+  //     }
+  //   }
+
+  //   return {
+  //     items: insertedItems,
+  //     total_price: totalAmount,
+  //     uuid: purchaseOrderUUID,
+  //     company_name_supplier: companyNameSupplier,
+  //   };
+  // }
+
   async add(data) {
-    if (!Array.isArray(data.items)) {
-      throw new Error("Invalid request format");
-    }
-
-    const insertedItems = [];
-    let totalAmount = 0;
-    let purchaseOrderUUID;
-    const companyNameSupplier = data.company_name_supplier;
-
-    for (const item of data.items) {
-      const validItem = await this.db("product")
-        .where({
-          item_code: item.item_code,
-        })
-        .first();
-
-      if (!validItem) {
-        throw new Error("Invalid item reference");
-      }
-
-      const itemTotalAmount = item.quantity * item.price;
-
-      const itemPrice = itemTotalAmount / item.quantity;
-
-      const newOrder = {
-        date: item.date,
-        due_date: item.due_date,
-        address: item.address,
-        terms_of_agreement: item.terms_of_agreement,
-        company_name_supplier: companyNameSupplier,
-        item_code: item.item_code,
-        item_name: item.item_name,
-        description: validItem.description,
-        quantity: item.quantity,
-        price: itemPrice, // Use itemPrice as the price per item
-        total_amount: itemTotalAmount,
-      };
-
-      await this.db(this.table).insert(newOrder);
-
-      insertedItems.push({
-        ...newOrder,
-        company_name_supplier: companyNameSupplier,
+    try {
+      return await this.db(this.table).insert({
+        po_code: data.po_code,
+        company_name: data.company_name,
+        address: data.address,
+        item_count: data.item_count,
+        total_amount: data.total_amount,
+        date: data.date,
+        dueDate: data.due_date,
+        remarks: data.remarks,
       });
-
-      if (!purchaseOrderUUID) {
-        purchaseOrderUUID = validItem.uuid;
-      }
+    } catch (error) {
+      return error;
     }
-
-    return {
-      items: insertedItems,
-      total_price: totalAmount,
-      uuid: purchaseOrderUUID,
-      company_name_supplier: companyNameSupplier,
-    };
   }
+
 
   async getAll() {
     const results = await this.db(this.table).select("*");

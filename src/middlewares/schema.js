@@ -180,10 +180,12 @@ const userDao =
             table.index("item_code");
           })
 
-          .createTable("purchase_request_item", (table) => {
+          .createTable("purchase_item", (table) => {
             table.increments("uuid").primary();
             table.string("item_code").notNullable();
             table.string("pr_code").notNullable();
+            table.string("po_code").nullable(); 
+            table.string("tf_code").nullable(); 
             table.double("price").notNullable();
             table.integer("quantity").notNullable();
             table
@@ -226,9 +228,12 @@ const userDao =
             table.index("item_code");
           })
 
-          .createTable("purchase_request", (table) => {
+          .createTable("purchase", (table) => {
             table.increments("uuid").primary();
             table.string("pr_code").notNullable();
+            table.string("po_code").nullable(); 
+            table.string("tf_code").nullable(); 
+            table.string("or_code").nullable();
             table.string("company_name").notNullable().defaultTo("Earth");
             table
               .string("address")
@@ -236,44 +241,95 @@ const userDao =
               .defaultTo("3rd planet, Solar System, Milky Way Galaxy");
             table.integer("item_count").notNullable();
             table.double("total_amount");
+            table.string("process_type").nullable();
+            table.date("date").nullable();
+            table.date("due_date").nullable();
             table.string("remarks").nullable();
-            table.string("attention").nullable();
+            table.string("request_date").nullable();
+            table.string("order_date").nullable();
+            table.string("order_due_date").nullable();
+            table.string("transmittal_date").nullable();
+            table.string("billing_date").nullable();
+            table.string("terms_of_agreement").nullable();
+            table.string("purpose").nullable();
+            table.string("unit").nullable();
+            table.string("prepared_by").nullable();
+            table.string("noted_by").nullable();
+            table.string("prepare_date").nullable();
+            table.string("received_by").nullable();
+            table.string("received_date").nullable();
             table.timestamps(true, true);
           })
 
-          .createTable("purchase_order", (table) => {
-            table.increments("uuid").primary(); //purchase order num
-            table.date("date").notNullable();
-            table.date("due_date").notNullable();
-            table.string("company_name_supplier").notNullable();
-            table.string("address").notNullable();
-            table.string("terms_of_agreement").notNullable();
-            table.string("item_code").notNullable();
-            table
-              .string("item_name")
-              .notNullable()
-              .references("name")
-              .inTable("product");
-            table.string("description").nullable();
-            table.integer("quantity").notNullable();
-            table.double("price").notNullable();
-            table.double("total_amount").notNullable();
-            table.string("remarks").nullable();
-            table.timestamps(true, true);
-            table
-              .foreign("description")
-              .references("description")
-              .inTable("product");
-            table
-              .foreign("item_code")
-              .references("item_code")
-              .inTable("product");
-            table.foreign("price").references("price").inTable("product");
+          
 
-            table.index("item_code");
-            table.index("price");
-            table.index("description");
-          })
+          // .createTable("purchase_order_item", (table) => {
+          //   table.increments("uuid").primary();
+          //   table.string("item_code").notNullable();
+          //   table.string("po_code").notNullable();
+          //   table.double("price").notNullable();
+          //   table.integer("quantity").notNullable();
+          //   table
+          //     .integer("product_id")
+          //     .unsigned()
+          //     .notNullable()
+          //     .references("uuid")
+          //     .inTable("product")
+          //     .onDelete("RESTRICT");
+          //   table
+          //     .integer("brand_id")
+          //     .unsigned()
+          //     .notNullable()
+          //     .references("uuid")
+          //     .inTable("brand")
+          //     .onDelete("RESTRICT");
+          //   table
+          //     .integer("supplier_id")
+          //     .unsigned()
+          //     .notNullable()
+          //     .references("uuid")
+          //     .inTable("supplier")
+          //     .onDelete("RESTRICT");
+          //   table
+          //     .integer("category_id")
+          //     .unsigned()
+          //     .notNullable()
+          //     .references("uuid")
+          //     .inTable("category")
+          //     .onDelete("RESTRICT");
+          //   table
+          //     .string("description")
+          //     .notNullable()
+          //     .references("description")
+          //     .inTable("product")
+          //   table.timestamps(true, true);
+          //   table
+          //     .foreign("price")
+          //     .references("price")
+          //     .inTable("product");
+          //   table
+          //     .foreign("item_code")
+          //     .references("item_code")
+          //     .inTable("product");
+          //   table.index("price");
+          //   table.index("item_code");
+          // })
+
+          // .createTable("purchase_order", (table) => {
+          //   table.increments("uuid").primary();
+          //   table.string("po_code").notNullable();
+          //   table.string("company_name").notNullable().defaultTo("Earth");
+          //   table
+          //     .string("address")
+          //     .notNullable()
+          //     .defaultTo("3rd planet, Solar System, Milky Way Galaxy");
+          //   table.integer("item_count").notNullable();
+          //   table.double("total_amount");
+          //   table.date("date").notNullable();
+          //   table.date("due_date").notNullable();
+          //   table.string("remarks").nullable();
+          //   table.timestamps(true, true);
+          // })
 
           .createTable("logs", (table) => {
             table.increments("log_id").primary();
