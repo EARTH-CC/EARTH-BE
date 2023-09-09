@@ -183,9 +183,7 @@ const userDao =
           .createTable("purchase_item", (table) => {
             table.increments("uuid").primary();
             table.string("item_code").notNullable();
-            table.string("pr_code").notNullable();
-            table.string("po_code").nullable(); 
-            table.string("tf_code").nullable(); 
+            table.string("ref_code").notNullable();  
             table.double("price").notNullable();
             table.integer("quantity").notNullable();
             table
@@ -228,40 +226,41 @@ const userDao =
             table.index("item_code");
           })
 
-          .createTable("purchase", (table) => {
+          .createTable("procurement", (table) => {
             table.increments("uuid").primary();
-            table.string("pr_code").notNullable();
-            table.string("po_code").nullable(); 
-            table.string("tf_code").nullable(); 
+            table.string("ref_code").notNullable();
+            table.string("pr_code").nullable();
+            table.string("po_code").nullable();
+            table.string("tf_code").nullable();
             table.string("or_code").nullable();
-            table.string("company_name").notNullable().defaultTo("Earth");
+            table.string("company_name").notNullable().defaultTo("Earth"); 
             table
-              .string("address")
+              .string("address") 
               .notNullable()
               .defaultTo("3rd planet, Solar System, Milky Way Galaxy");
             table.integer("item_count").notNullable();
             table.double("total_amount");
-            table.string("process_type").nullable();
-            table.date("date").nullable();
+            table.string("process_type").nullable(); //manual 
+            table.string("pr_status").notNullable().defaultTo(1);
+            table.string("po_status").notNullable().defaultTo(1);
+            table.string("tf_status").notNullable().defaultTo(1);
+            table.date("attention").nullable(); //manual
+            table.string("remarks").nullable(); //manual
+            table.date("request_date").nullable();
+            table.date("order_date").nullable();
+            table.date("transmit_date").nullable();
             table.date("due_date").nullable();
-            table.string("remarks").nullable();
-            table.string("request_date").nullable();
-            table.string("order_date").nullable();
-            table.string("order_due_date").nullable();
-            table.string("transmittal_date").nullable();
-            table.string("billing_date").nullable();
-            table.string("terms_of_agreement").nullable();
-            table.string("purpose").nullable();
-            table.string("unit").nullable();
-            table.string("prepared_by").nullable();
-            table.string("noted_by").nullable();
-            table.string("prepare_date").nullable();
-            table.string("received_by").nullable();
+            table.date("billing_date").nullable();
             table.string("received_date").nullable();
-            table.timestamps(true, true);
+            table.string("prepared_date").nullable();
+            table.string("terms_of_agreement").nullable(); //manual 
+            table.string("purpose").nullable();  //maunal
+            table.string("unit").nullable();         //manual
+            table.string("prepared_by").nullable(); //manual
+            table.string("noted_by").nullable();    //manual
+            table.string("received_by").nullable();  //manual
+            table.timestamps(true, true);  
           })
-
-          
 
           // .createTable("purchase_order_item", (table) => {
           //   table.increments("uuid").primary();
