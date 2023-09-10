@@ -1,5 +1,5 @@
 const { query } = require("express");
-const categoryTableConfig = require("../../../../configuration/earthConfig/categoryTableConfig");
+const categoryTableConfig = require("../../../../configuration/procurement/categoryTableConfig");
 
 
 class CategoryStore {

@@ -1,5 +1,5 @@
 const { query } = require("express");
-const supplierTableConfig = require("../../../../configuration/earthConfig/supplierTableConfig");
+const supplierTableConfig = require("../../../../configuration/procurement/supplierTableConfig");
 
 
 class SupplierStore {

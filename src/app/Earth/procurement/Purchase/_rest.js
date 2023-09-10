@@ -15,6 +15,13 @@ router.post("/purchase", db, asyncHandler(service.Add));
 //Get All
 router.get("/purchase/get", db, asyncHandler(service.getAllData));
 
+//Update
+router.put("/purchase/update/order", db, asyncHandler(service.update));
+
+//Update
+router.put("/purchase/update/transmittal", db, asyncHandler(service.update));
+
+
 //Get
 router.get("/purchase/get/:uuid", auth, db, asyncHandler(service.get));
 

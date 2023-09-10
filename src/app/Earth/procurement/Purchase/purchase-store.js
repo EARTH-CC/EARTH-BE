@@ -1,5 +1,5 @@
 const { query } = require("express");
-const purchaseTableConfig = require("../../../../configuration/earthConfig/purchaseTableConfig");
+const purchaseTableConfig = require("../../../../configuration/procurement/purchaseTableConfig");
 
 class PurchaseStore {
   constructor(db) {
@@ -29,8 +29,10 @@ class PurchaseStore {
     });
   }
 
-  async getAll() {
-    const results = await this.db(this.table).select();
+  async getAll(processType) {
+    const results = await this.db(this.table)
+      .select()
+      .where(this.cols.processType, "=", processType.processName);
     return results;
   }
 

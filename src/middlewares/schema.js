@@ -186,7 +186,7 @@ const userDao =
             table.string("po_code").nullable();
             table.string("tf_code").nullable();
             table.string("or_code").nullable();
-            table.string("process_type").nullable(); //manual
+            table.string("process_type").nullable().defaultTo("request");
             table.string("pr_status").notNullable().defaultTo(1);
             table.string("po_status").notNullable().defaultTo(1);
             table.string("tf_status").notNullable().defaultTo(1);

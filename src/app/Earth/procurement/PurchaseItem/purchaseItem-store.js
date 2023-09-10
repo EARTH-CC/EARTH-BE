@@ -1,5 +1,5 @@
 const { query } = require("express");
-const purchaseItemTableConfig = require("../../../../configuration/earthConfig/purchaseItemTableConfig");
+const purchaseItemTableConfig = require("../../../../configuration/procurement/purchaseItemTableConfig");
 
 class CartStore {
   constructor(db) {

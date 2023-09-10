@@ -41,7 +41,8 @@ class PurchaseService {
     try {
       let result = [];
       const store = new Store(req.db);
-      result = await store.getAll();
+      const processType = req.query;
+      result = await store.getAll(processType);
 
       if (!result) {
         result = [];

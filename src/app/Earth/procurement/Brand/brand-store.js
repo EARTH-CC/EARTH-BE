@@ -1,5 +1,5 @@
 const { query } = require("express");
-const brandTableConfig = require("../../../../configuration/earthConfig/brandTableConfig");
+const brandTableConfig = require("../../../../configuration/procurement/brandTableConfig");
 
 class BrandStore {
   constructor(db) {
