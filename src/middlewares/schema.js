@@ -200,15 +200,15 @@ const userDao =
             table.string("terms_of_agreement").nullable(); //manual
             table.string("purpose").nullable(); //maunal
             table.string("unit").nullable(); //manual
-            table.date("attention").nullable(); //manual
+            table.string("attention").nullable(); //manual
             table.string("remarks").nullable(); //manual
             table.date("request_date").nullable();
             table.date("order_date").nullable();
             table.date("transmit_date").nullable();
             table.date("due_date").nullable();
             table.date("billing_date").nullable();
-            table.string("received_date").nullable();
-            table.string("prepared_date").nullable();
+            table.date("received_date").nullable();
+            table.date("prepared_date").nullable();
             table.string("prepared_by").nullable(); //manual
             table.string("noted_by").nullable(); //manual
             table.string("received_by").nullable(); //manual

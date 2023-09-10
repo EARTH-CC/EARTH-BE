@@ -36,6 +36,7 @@ class PurchaseService {
     }
   }
 
+  
   async getAllData(req, res, next) {
     try {
       let result = [];

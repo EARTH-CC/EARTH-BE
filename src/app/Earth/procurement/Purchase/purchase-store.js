@@ -9,20 +9,24 @@ class PurchaseStore {
   }
 
   async add(data) {
-    try {
-      return await this.db(this.table).insert({
-        ref_code: data.pr_code,
-        pr_code: data.pr_code,
-        company_name: data.company_name,
-        address: data.address,
-        item_count: data.item_count,
-        total_amount: data.total_amount,
-        remarks: data.remarks,
-        attention: data.attention,
-      });
-    } catch (error) {
-      return error;
-    }
+    console.log(data);
+    return new Promise(async (resolve, reject) => {
+      try {
+        const result = await this.db(this.table).insert({
+          ref_code: data.ref_code,
+          pr_code: data.pr_code,
+          company_name: data.company_name,
+          address: data.address,
+          item_count: data.item_count,
+          total_amount: data.total_amount,
+          remarks: data.remarks,
+          attention: data.attention,
+        });
+        resolve(result);
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
   async getAll() {
