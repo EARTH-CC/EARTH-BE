@@ -2,9 +2,11 @@ const Store = require("./purchase-store");
 const ItemStore = require("../PurchaseItem/purchaseItem-store");
 const Logs = require("../../../logs/logs-store");
 const { NotFoundError } = require("../../../../middlewares/errors");
+const fs = require("fs");
+const { log } = require("console");
 const moduleName = "Purchase";
 const userId = 1;
-let currentCounter = 101;
+const currentDate = new Date();
 
 class PurchaseService {
   constructor(store) {}
@@ -16,14 +18,19 @@ class PurchaseService {
       const itemStore = new ItemStore(req.db);
       const logs = new Logs(req.db);
       const data = req.body; // Pass the entire request body
-      const prRef_code = generatePrCode(data.items);
-      const itemsResult = await itemStore.add(data.items, prRef_code);
-      const requestResult = await store.add({
+      const prefix = "MWC-PRF";
+      const refCode = generateRefCode(data);
+      const prCode = generateProcessCode(prefix);
+      const totalAmount = getTotalAmount(data.items);
+
+      await itemStore.add(data.items, prCode);
+      await store.add({
         ...data,
         item_count: data.items.length,
-        ref_code: prRef_code,
-        pr_code: prRef_code,
-        total_amount: itemsResult,
+        ref_code: refCode,
+        pr_code: prCode,
+        total_amount: totalAmount,
+        request_date: currentDate,
       });
       const response = {
         message: "Purchase Request added successfully",
@@ -36,7 +43,6 @@ class PurchaseService {
     }
   }
 
-  
   async getAllData(req, res, next) {
     try {
       let result = [];
@@ -56,31 +62,30 @@ class PurchaseService {
     }
   }
 
-
   //eto yung sa get all items
   async getAllItems(req, res, next) {
     try {
       const { prRef_code } = req.query; // Use prRef_code if it matches your route definition
-  
+
       if (!prRef_code) {
         // Handle the case where prRef_code is missing in the request
-        return res.status(400).json({ error: 'prRef_code is required' });
+        return res.status(400).json({ error: "prRef_code is required" });
       }
-  
+
       const itemStore = new ItemStore(req.db);
       // const store = new Store(req.db);
       // const request = await store.getAll();
       const items = await itemStore.getAll(prRef_code);
-  
+
       if (items.length === 0) {
-        // Handle the case where no items were found 
-        return res.status(404).json({ error: 'No items found for prRef_code' });
+        // Handle the case where no items were found
+        return res.status(404).json({ error: "No items found for prRef_code" });
       }
-  
+
       // Send the items as a response
       return res.status(200).send({
         success: true,
-        pr_code: prRef_code, 
+        pr_code: prRef_code,
         data: items,
       });
     } catch (err) {
@@ -168,17 +173,59 @@ class PurchaseService {
   }
 }
 
-function generatePrCode(data) {
-  const currentYear = new Date().getFullYear();
-  const paddedCounter = currentCounter.toString().padStart(4, "0");
-
-  currentCounter++;
-
-  return `${data[0].product_id}${data[0].brand_id}${data[0].category_id}${
-    data[0].supplier_id
-  }${data[0].item_code
+function generateRefCode(data) {
+  let currentYear = new Date().getFullYear();
+  // Load the counter value from a file (assuming the file contains a single number)
+  let counter = 1;
+  try {
+    const file = fs.readFileSync("../../../../../counter.text", "utf8");
+    counter = parseInt(file, 10) || 1;
+  } catch (err) {
+    console.error("Error reading counter:", err);
+  }
+  currentYear = String(currentYear).padStart(4, "0");
+  counter = String(counter).padStart(4, "0");
+  const refCode = `REF${data.items[0].item_code
     .substring(0, 2)
-    .toUpperCase()}${currentYear}${paddedCounter}`;
+    .toUpperCase()}${data.remarks
+    .substring(0, 2)
+    .toUpperCase()}${data.items[0].price.toString().slice(-2)}${currentYear}${counter}`;
+
+
+
+  counter++;
+  fs.writeFileSync("../../../../../counter.text", counter.toString());
+
+  return refCode;
+}
+
+function generateProcessCode(prefix) {
+  let currentYear = new Date().getFullYear();
+  // Load the counter value from a file (assuming the file contains a single number)
+  let counter = 1;
+  try {
+    const file = fs.readFileSync("../../../../../counter.text", "utf8");
+    counter = parseInt(file, 10) || 1;
+  } catch (err) {
+    console.error("Error reading counter:", err);
+  }
+  currentYear = String(currentYear).padStart(4, "0");
+  counter = String(counter).padStart(4, "0");
+
+  const Code = `${prefix}-${currentYear}-${counter}`;
+
+  counter++;
+  fs.writeFileSync("../../../../../counter.text", counter.toString());
+
+  return Code;
+}
+
+function getTotalAmount(dataArray) {
+  const totalAmountSum = dataArray.reduce(
+    (sum, data) => sum + data.price * data.quantity,
+    0
+  );
+  return totalAmountSum;
 }
 
 module.exports = PurchaseService;

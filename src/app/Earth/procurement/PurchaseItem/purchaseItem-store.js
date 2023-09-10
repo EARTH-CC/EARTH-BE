@@ -1,25 +1,26 @@
 const { query } = require("express");
 const purchaseItemTableConfig = require("../../../../configuration/procurement/purchaseItemTableConfig");
 
-class CartStore {
+class PurchaseItemStore {
   constructor(db) {
     this.db = db;
     this.table = purchaseItemTableConfig.tableName;
     this.cols = purchaseItemTableConfig.columnNames;
   }
 
-  async add(dataArray, prRef_code) {
-    // Add pr_code to each object in the dataArray
-    const totalAmountSum = dataArray.reduce(
-      (sum, data) => sum + data.price * data.quantity,
-      0
-    );
-    const dataWithPrCode = dataArray.map((data) => ({
-      ...data,
-      ref_code: prRef_code,
-    }));
-    await this.db(this.table).insert(dataWithPrCode);
-    return totalAmountSum;
+  async add(dataArray, refCode) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const dataWithPrCode = dataArray.map((data) => ({
+          ...data,
+          ref_code: refCode,
+        }));
+        const result = await this.db(this.table).insert(dataWithPrCode);
+        resolve(result);
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
   //get all items
@@ -44,14 +45,13 @@ class CartStore {
         .join("supplier", "purchase_item.supplier_id", "=", "supplier.uuid")
         .join("category", "purchase_item.category_id", "=", "category.uuid")
         .where("purchase_item.pr_code", "like", `%${prRef_code}%`);
-  
+
       return results;
     } catch (error) {
       console.error("Error in getAll:", error);
       throw error;
     }
   }
-  
 }
 
-module.exports = CartStore;
+module.exports = PurchaseItemStore;
