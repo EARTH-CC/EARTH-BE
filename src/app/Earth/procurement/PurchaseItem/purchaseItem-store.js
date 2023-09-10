@@ -16,7 +16,7 @@ class CartStore {
     );
     const dataWithPrCode = dataArray.map((data) => ({
       ...data,
-      pr_code: prRef_code,
+      ref_code: prRef_code,
     }));
     await this.db(this.table).insert(dataWithPrCode);
     return totalAmountSum;
@@ -29,7 +29,7 @@ class CartStore {
         .select(
           "purchase_item.created_at as date",
           "purchase_item.item_code",
-          "purchase_item.pr_code",
+          "purchase_item.ref_code",
           "purchase_item.price",
           "purchase_item.quantity",
           "purchase_item.description",

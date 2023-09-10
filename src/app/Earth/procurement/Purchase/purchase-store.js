@@ -11,6 +11,7 @@ class PurchaseStore {
   async add(data) {
     try {
       return await this.db(this.table).insert({
+        ref_code: data.pr_code,
         pr_code: data.pr_code,
         company_name: data.company_name,
         address: data.address,
