@@ -191,8 +191,6 @@ function generateRefCode(data) {
     .substring(0, 2)
     .toUpperCase()}${data.items[0].price.toString().slice(-2)}${currentYear}${counter}`;
 
-
-
   counter++;
   fs.writeFileSync("../../../../../counter.text", counter.toString());
 

@@ -29,8 +29,10 @@ class PurchaseStore {
     });
   }
 
-  async getAll() {
-    const results = await this.db(this.table).select();
+  async getAll(processType) {
+    const results = await this.db(this.table)
+      .select()
+      .where(this.cols.processType, "=", processType.processName);
     return results;
   }
 

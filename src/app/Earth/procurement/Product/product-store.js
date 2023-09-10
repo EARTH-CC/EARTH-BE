@@ -34,24 +34,6 @@ class ProductStore {
     };
   }
 
-  // async getSupplierById(supplierId) {
-  //   return await this.db("supplier")
-  //     .select("name")
-  //     .where("uuid", supplierId)
-  //     .first();
-  // }
-
-  // async getCategoryById(categoryId) {
-  //   return await this.db("category")
-  //     .select("name")
-  //     .where("uuid", categoryId)
-  //     .first();
-  // }
-
-  // async getBrandById(brandId) {
-  //   return await this.db("brand").select("name").where("uuid", brandId).first();
-  // }
-
   async getPrice(startRange, endRange) {
     const products = await this.db(this.table)
       .select("*")
@@ -79,7 +61,10 @@ class ProductStore {
         "supplier.address as supplier_address",
         "brand.name as brand_name",
         "category.name as category_name",
-        "supplier.name as supplier_name"
+        "supplier.name as supplier_name",
+        "supplier.phone_no",
+        "supplier.mobile_no",
+        "supplier.tin_no"
       )
       .join("brand", "product.brand_id", "=", "brand.uuid")
       .join("category", "product.category_id", "=", "category.uuid")
