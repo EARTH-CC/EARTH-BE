@@ -1,11 +1,11 @@
 const { query } = require("express");
-const purchaseRequestTableConfig = require("../../../../configuration/earthConfig/purchaseRequestTableConfig");
+const purchaseTableConfig = require("../../../../configuration/earthConfig/purchaseTableConfig");
 
-class PurchaseRequestStore {
+class PurchaseStore {
   constructor(db) {
     this.db = db;
-    this.table = purchaseRequestTableConfig.tableName;
-    this.cols = purchaseRequestTableConfig.columnNames;
+    this.table = purchaseTableConfig.tableName;
+    this.cols = purchaseTableConfig.columnNames;
   }
 
   async add(data) {
@@ -276,4 +276,4 @@ class PurchaseRequestStore {
 //   return lastDate;
 // }
 
-module.exports = PurchaseRequestStore;
+module.exports = PurchaseStore;

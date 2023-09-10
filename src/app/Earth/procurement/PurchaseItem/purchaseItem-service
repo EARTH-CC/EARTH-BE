@@ -1,0 +1,27 @@
+const Store = require("../PurchaseItem/purchaseItem-store");
+const Logs = require("../../../logs/logs-store");
+const { NotFoundError } = require("../../../../middlewares/errors");
+const moduleName = "PurchaseItem";
+const userId = 1;
+let currentCounter = 101;
+
+class PurchaseItemService {
+  constructor(store) {}
+
+  
+}
+
+function generatePrCode(data) {
+  const currentYear = new Date().getFullYear();
+  const paddedCounter = currentCounter.toString().padStart(4, "0");
+
+  currentCounter++;
+
+  return `${data[0].product_id}${data[0].brand_id}${data[0].category_id}${
+    data[0].supplier_id
+  }${data[0].item_code
+    .substring(0, 2)
+    .toUpperCase()}${currentYear}${paddedCounter}`;
+}
+
+module.exports = PurchaseItemService;

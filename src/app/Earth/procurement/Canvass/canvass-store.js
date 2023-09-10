@@ -10,28 +10,66 @@ class CanvassStore {
 
   async add(data) {
     return await this.db(this.table).insert({
-      date: data.date,
-      company_name: data.company_name,
-      address: data.address,
-      tel_no: data.tel_no,
-      tin_no: data.tin_no,
-      item_num: data.item_num,
-      description: data.description,
-      quantity: data.quantity,
-      rating: data.rating,
+      name: data.name,
       price: data.price,
-      total_amount: data.total_amount,
-      canvasser: data.canvasser,
-      quoted_by_rep: data.quoted_by_rep,
+      item_code: data.item_code,
+      quantity: data.quantity,
+      description: data.description,
     });
   }
 
-  async getPrice(startRange, endRange) {
-    const products = await this.db(this.table)
-    .select('*')
-    .whereBetween('price', [startRange, endRange]);
+  async getAllCart() {
+    try {
+      const results = await this.db
+        .select(
+          "canvass.uuid",
+          "canvass.name",
+          "canvass.item_code",
+          "canvass.quantity",
+          "canvass.price",
+          "canvass.description",
+          "canvass.created_at",
+          "canvass.updated_at",
+          "brand.name as brand",
+          "supplier.name as supplier"
+        )
+        .from("canvass")
+        .join("product", "product.item_code", "=", "canvass.item_code")
+        .join("brand", "product.brand_id", "=", "brand.uuid")
+        .join("supplier", "product.supplier_id", "=", "supplier.uuid")
+        .where("canvass.status", "=", 1);
 
-    return products;
+      return results;
+    } catch (error) {
+      // Handle any potential errors here
+      console.error("Error in getAll:", error);
+      throw error; // You can choose to rethrow the error or handle it differently
+    }
+  }
+
+  async getCartPrice() {
+    try {
+      const result = await this.db(this.table)
+        .select(this.db.raw("SUM(price * quantity) as total_price"))
+        .count(`${this.cols.id} as items`)
+        .where("status", "=", 1)
+        .first();
+
+      if (result !== undefined && result !== null) {
+        // Check if either total_price or items is not null
+        if (result.total_price !== null && result.items !== null) {
+          return result;
+        } else {
+          return { total_price: 0, items: 0 };
+        }
+      } else {
+        // Handle the case where the table is empty
+        return { total_price: 0, items: 0 };
+      }
+    } catch (error) {
+      console.error("Error calculating cart price:", error);
+      throw error;
+    }
   }
 
   async update(uuid, body) {
@@ -70,23 +108,23 @@ class CanvassStore {
   async getAll() {
     const results = await this.db(this.table)
       .select(
-        'product.uuid',
-        'product.name',
-        'product.price',
-        'product.item_code',
-        'product.description',
-        'product.status',
-        'product.created_at',
-        'product.updated_at',
-        'product.added_by',
-        'brand.name as brand_name',
-        'category.name as category_name',
-        'supplier.name as supplier_name'
+        "product.uuid",
+        "product.name",
+        "product.price",
+        "product.item_code",
+        "product.description",
+        "product.status",
+        "product.created_at",
+        "product.updated_at",
+        "product.added_by",
+        "brand.name as brand_name",
+        "category.name as category_name",
+        "supplier.name as supplier_name"
       )
-      .join('brand', 'product.brand_id', '=', 'brand.uuid')
-      .join('category', 'product.category_id', '=', 'category.uuid')
-      .join('supplier', 'product.supplier_id', '=', 'supplier.uuid');
-  
+      .join("brand", "product.brand_id", "=", "brand.uuid")
+      .join("category", "product.category_id", "=", "category.uuid")
+      .join("supplier", "product.supplier_id", "=", "supplier.uuid");
+
     return results;
   }
 
@@ -102,8 +140,6 @@ class CanvassStore {
   //     .then((columns) => Object.keys(columns));
   //   return results.length > 0 ? convertedResults : { columnNames };
   // }
-
-
 
   async delete(uuid) {
     const deletedRows = await this.db(this.table)

@@ -6,6 +6,7 @@ router.use(errorHandler);
 router.use(require("./users/_rest"));
 router.use(require("./download/_rest"));
 router.use(require("./logs/_rest"));
+
 // TAD REPORTS
 router.use(require("./tad/abacaDiseaseManagement/_rest"));
 router.use(require("./tad/cocoon/_rest"));
@@ -26,8 +27,7 @@ router.use(require("./Earth/procurement/Category/_rest"));
 router.use(require("./Earth/procurement/Brand/_rest"));
 router.use(require("./Earth/procurement/Product/_rest"));
 router.use(require("./Earth/procurement/Canvass/_rest"));
-router.use(require("./Earth/procurement/Cart/_rest"));
-router.use(require("./Earth/procurement/PurchaseRequest/_rest"));
-router.use(require(".//Earth/procurement/purchaseOrder/_rest"));
+router.use(require("./Earth/procurement/Purchase/_rest"));
+router.use(require(".//Earth/procurement/PurchaseItem/_rest"));
 
 module.exports = router;

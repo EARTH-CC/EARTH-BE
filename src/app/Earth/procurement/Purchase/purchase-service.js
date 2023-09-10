@@ -1,12 +1,12 @@
-const Store = require("./purchaseRequest-store");
-const ItemStore = require("./purchaseRequestItem-store");
+const Store = require("./purchase-store");
+const ItemStore = require("../PurchaseItem/purchaseItem-store");
 const Logs = require("../../../logs/logs-store");
 const { NotFoundError } = require("../../../../middlewares/errors");
-const moduleName = "Purchase Request";
+const moduleName = "Purchase";
 const userId = 1;
 let currentCounter = 101;
 
-class PurchaseRequestService {
+class PurchaseService {
   constructor(store) {}
 
   // Add
@@ -178,4 +178,4 @@ function generatePrCode(data) {
     .toUpperCase()}${currentYear}${paddedCounter}`;
 }
 
-module.exports = PurchaseRequestService;
+module.exports = PurchaseService;
