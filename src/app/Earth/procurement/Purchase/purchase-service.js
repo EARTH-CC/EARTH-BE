@@ -119,22 +119,13 @@ class PurchaseService {
       const uuid = req.params.uuid;
       const body = req.body;
       //const userId = req.auth.id;
-      const id = await store.getByUUID(uuid);
-      if (!id) {
-        throw new NotFoundError("ID Not Found");
-      }
       const result = await store.update(uuid, body);
       if (result === 0) {
         throw new NotFoundError("Data Not Found");
       }
-      // logs.add({
-      //   uuid: userId,
-      //   module: moduleName,
-      //   action: `updated a row in ${moduleName} table`,
-      //   data: result,
-      //   ...body
-      // });
+
       return res.status(200).send({
+        message: "Purchase Updated successfully",
         success: true,
         data: result,
       });
@@ -155,13 +146,13 @@ class PurchaseService {
       if (result === 0) {
         throw new NotFoundError("Data Not Found");
       }
-      logs.add({
-        uuid: userId,
-        module: moduleName,
-        action: `deleted a row in ${moduleName} table`,
-        data: result,
-        ...body,
-      });
+      // logs.add({
+      //   uuid: userId,
+      //   module: moduleName,
+      //   action: `deleted a row in ${moduleName} table`,
+      //   data: result,
+      //   ...body,
+      // });
       return res.status(202).send({
         success: true,
         message: "Purchase Deleted successfuly",
@@ -193,7 +184,6 @@ function generateProcessCode(prefix, counter) {
   const Code = `${prefix}-${currentYear}-${counter}`;
   return Code;
 }
-
 
 function getTotalAmount(dataArray) {
   const totalAmountSum = dataArray.reduce(
