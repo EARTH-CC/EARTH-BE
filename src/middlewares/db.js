@@ -1,8 +1,4 @@
 const knex = require("knex");
-const express = require("express");
-const app = express();
-const port = 9001;
-
 const passwordOptions = ["macmac", "philfida", "1234", "philfilda"]; // Define your password options
 let db = null; // Initialize the database connection variable
 
@@ -42,12 +38,6 @@ async function connectToDatabase() {
 }
 
 connectToDatabase();
-
-// Middleware to attach the database connection to the request object
-app.use((req, res, next) => {
-  req.db = db;
-  next();
-});
 
 // Export the database middleware for use in other parts of your application
 module.exports = (req, res, next) => {
