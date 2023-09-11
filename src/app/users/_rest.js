@@ -31,8 +31,11 @@ router.get("/user/:uuid", db, asyncHandler(service.user));
 // Get all users
 router.get("/users/data", db, asyncHandler(service.getData));
 
-// Update user info
-router.put("/user/:uuid", db, asyncHandler(service.update));
+// Update user personal
+router.put("/userPersonal/:uuid", db, asyncHandler(service.updatePersonal));
+
+// Update user account
+router.put("/userAccount/:uuid", db, asyncHandler(service.updateAccount));
 
 // Delete a user
 // router.delete('/user/:uuid', db, asyncHandler(service.delete));

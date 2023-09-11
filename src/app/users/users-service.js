@@ -249,8 +249,43 @@ class UserService {
     }
   }
 
-  // Update user info
-  async update(req, res, next) {
+  // Update user personal info
+  async updatePersonal(req, res, next) {
+    try {
+      const store = new Store(req.db);
+      const logs = new Logs(req.db);
+      const uuid = req.params.uuid;
+      const body = req.body;
+      //const userId = req.auth.id; // Get user ID using auth
+      // Hash the password
+      // const hash = await bcrypt.hash(body.password, 10);
+      const result = store.updateUserPersonal(uuid, body);
+      if (result === 0) {
+        throw new NotFoundError("User not found");
+      }
+      const userData = { ...body };
+      delete userData.password;
+      logs.add({
+        uuid: userId,
+        module: moduleName,
+        data: userData,
+        action: "updated an account",
+        ...body,
+      });
+      return res.status(200).send({
+        success: true,
+        data: {
+          uuid,
+          ...userData,
+        },
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  // update user account information
+  async updateAccount(req, res, next) {
     try {
       const store = new Store(req.db);
       const logs = new Logs(req.db);
@@ -259,7 +294,7 @@ class UserService {
       //const userId = req.auth.id; // Get user ID using auth
       // Hash the password
       const hash = await bcrypt.hash(body.password, 10);
-      const result = store.updateUser(uuid, body, hash);
+      const result = store.updateUserAccount(uuid, body, hash);
       if (result === 0) {
         throw new NotFoundError("User not found");
       }

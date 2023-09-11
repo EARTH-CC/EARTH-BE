@@ -29,9 +29,7 @@ async function connectToDatabase() {
       console.log(`Connection attempt with password '${password}' successful.`);
       break;
     } catch (error) {
-      console.error(
-        `Connection attempt with password '${password}' failed:`
-      );
+      console.error(`Connection attempt with password '${password}' failed:`);
       db = null; // Reset the database connection variable
     }
   }
@@ -56,7 +54,6 @@ module.exports = (req, res, next) => {
   req.db = db;
   next();
 };
-
 
 // const knex = require("knex")({
 //   client: "mysql2",
