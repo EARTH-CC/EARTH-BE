@@ -23,15 +23,14 @@ async function connectToDatabase() {
           max: 100, // Maximum number of connections
         },
       });
-      console.log(`Trying password: '${password}'`);
       await db.raw("SELECT 1"); // Test the database connection
 
       // If the connection is successful, break out of the loop
+      console.log(`Connection attempt with password '${password}' successful.`);
       break;
     } catch (error) {
       console.error(
-        `Connection attempt with password '${password}' failed:`,
-        error
+        `Connection attempt with password '${password}' failed:`
       );
       db = null; // Reset the database connection variable
     }
@@ -58,17 +57,6 @@ module.exports = (req, res, next) => {
   next();
 };
 
-// Define your routes and route handlers here
-app.get("/", (req, res) => {
-  const db = req.db; // Access the database connection
-  // Your route logic here
-  res.send("Hello, World!");
-});
-
-// Start the Express.js server
-app.listen(port, () => {
-  console.log(`Back-end API listening on port ${port}`);
-});
 
 // const knex = require("knex")({
 //   client: "mysql2",
