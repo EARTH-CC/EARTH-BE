@@ -29,6 +29,18 @@ class PurchaseStore {
     });
   }
 
+async getMaxUUID() {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await this.db(this.table).max('uuid as max_uuid').first();
+      const maxUUID = result.max_uuid || 0; // Default to 0 if no result is found
+      resolve(maxUUID + 1);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
   async getAll(processType) {
     const results = await this.db(this.table)
       .select()
