@@ -75,21 +75,8 @@ class CanvassStore {
   async update(uuid, body) {
     // Perform the update operation
     await this.db(this.table).where(this.cols.id, uuid).update({
-      date: body.date,
-      company_name: body.company_name,
-      address: body.address,
-      tel_no: body.tel_no,
-      tin_no: body.tin_no,
-      item_num: body.item_num,
-      description: body.description,
       quantity: body.quantity,
-      unit: body.unit,
-      unit_price: body.unit_price,
-      total_amount: body.total_amount,
-      canvasser: body.canvasser,
-      quoted_by_rep: body.quoted_by_rep,
     });
-
     // Fetch the updated rows
     const updatedRows = await this.db(this.table)
       .where(this.cols.id, uuid)

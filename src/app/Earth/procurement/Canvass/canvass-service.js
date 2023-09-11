@@ -66,5 +66,54 @@ class CanvassService {
       next(err);
     }
   }
+
+  async updateQuantity(req, res, next) {
+    try {
+      const store = new Store(req.db);
+      const logs = new Logs(req.db);
+      const uuid = req.params.uuid;
+      const body = req.body;
+
+      const result = await store.update(uuid, body);
+      if (result === 0) {
+        throw new NotFoundError("Data Not Found");
+      }
+
+      return res.status(200).send ({
+        message: "Canvass Updated successfully",
+        success: true,
+        data: result,
+      });
+    }catch(err){
+      next(err)
+    }
+  }
+
+  async delete(req, res, next) {
+    try {
+      const store = new Store(req.db);
+      const logs = new Logs(req.db);
+      const uuid = req.params.uuid;
+      const body = req.body;
+      //const userId = req.auth.id; // Get user ID using auth
+      const result = await store.delete(uuid);
+      if (result === 0) {
+        throw new NotFoundError("Data Not Found");
+      }
+      logs.add({
+        uuid: userId,
+        module: moduleName,
+        action: `deleted a row in ${moduleName} table`,
+        data: result,
+        ...body,
+      });
+      return res.status(202).send({
+        success: true,
+        message: "Canvass Item Deleted successfuly",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 module.exports = CanvassService;

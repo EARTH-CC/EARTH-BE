@@ -37,31 +37,9 @@ class PurchaseStore {
   }
 
   async update(uuid, body) {
-    const validItem = await this.db("purchase_items")
-      .where({
-        item_name: body.item_name,
-        item_type: body.item_type,
-        description: body.description,
-      })
-      .first();
-
-    if (!validItem) {
-      throw new Error("Invalid item references");
-    }
     // Perform the update operation
     await this.db(this.table).where(this.cols.id, uuid).update({
-      date: body.date,
-      company_name: body.company_name,
-      address: body.address,
-      attention: body.attention,
-      item_name: body.item_name,
-      item_type: body.item_type,
-      description: body.description,
       quantity: body.quantity,
-      unit: body.unit,
-      unit_cost: body.unit_cost,
-      amount: body.amount,
-      remarks: body.remarks,
     });
 
     // Fetch the updated rows

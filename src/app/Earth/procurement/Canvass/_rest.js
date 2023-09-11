@@ -20,7 +20,7 @@ router.get("/canvass/price", db, asyncHandler(service.getCartPrice));
 router.get("/canvass/get/:uuid", auth, db, asyncHandler(service.get));
 
 //Update
-router.put("/canvass/update/:uuid", db, asyncHandler(service.update));
+router.put("/canvass/update/:uuid", db, asyncHandler(service.updateQuantity));
 
 //Delete
 router.delete("/canvass/delete/:uuid", db, asyncHandler(service.delete));
