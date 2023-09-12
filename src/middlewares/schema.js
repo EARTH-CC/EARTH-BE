@@ -281,8 +281,8 @@ const userDao =
             username: "eg",
             password:
               "$2b$10$6Hq/7njiVUixrRytZmj.XuPsGqxvet.dAVhdYyIQsLINk/GuZBgee",
-            firstname: "Mark",
-            lastname: "Salem",
+            firstname: "Matthew",
+            lastname: "Romero",
             // region: "all",
             role: "superadmin",
           },
@@ -321,6 +321,7 @@ const userDao =
             lastname: "PhilFIDA",
             // region: "all",
             role: "user",
+            status: 0,
           },
           {
             username: "ugtrade",
@@ -330,6 +331,7 @@ const userDao =
             lastname: "PhilFIDA",
             // region: "all",
             role: "user",
+            status: 0,
           },
           {
             username: "erotas",
