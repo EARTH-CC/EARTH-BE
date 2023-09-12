@@ -15,7 +15,7 @@ async function connectToDatabase() {
           database: "earth",
         },
         pool: {
-          min: 2, // Minimum number of connections
+          min: 1, // Minimum number of connections
           max: 100, // Maximum number of connections
         },
       });

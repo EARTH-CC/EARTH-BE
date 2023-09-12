@@ -296,13 +296,22 @@ const userDao =
             role: "canvasser",
           },
           {
+            username: "Rayder",
+            password:
+              "$2b$10$qSTG1Qk0/XD5HS0vTz.E.eIWQCAJPQSrEbq8Zc.rmtUm6.8NVT2m6",
+            firstname: "Ray",
+            lastname: "Hernandez",
+            // region: "all",
+            role: "superadmin",
+          },
+          {
             username: "mark",
             password:
               "$2a$12$SyV2IQFzjS5hy/ubz2K64ePju1I.r8/wcdT/VF1ZL3RvCn/ujHWTK",
             firstname: "Mark",
             lastname: "Salem",
             // region: "all",
-            role: "pr",
+            role: "superadmin",
           },
           {
             username: "bontrade",
@@ -311,7 +320,7 @@ const userDao =
             firstname: "PhilFIDA",
             lastname: "PhilFIDA",
             // region: "all",
-            role: "bontrade",
+            role: "user",
           },
           {
             username: "ugtrade",
@@ -320,7 +329,7 @@ const userDao =
             firstname: "PhilFIDA",
             lastname: "PhilFIDA",
             // region: "all",
-            role: "ugtrade",
+            role: "user",
           },
           {
             username: "erotas",
@@ -329,7 +338,7 @@ const userDao =
             firstname: "PhilFIDA",
             lastname: "PhilFIDA",
             // region: "all",
-            role: "erotas",
+            role: "user",
           },
         ]);
       } catch (error) {

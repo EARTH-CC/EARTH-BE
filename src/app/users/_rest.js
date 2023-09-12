@@ -29,7 +29,7 @@ router.post("/password", db, asyncHandler(service.password));
 router.get("/user/:uuid", db, asyncHandler(service.user));
 
 // Get all users
-router.get("/users/data", db, asyncHandler(service.getData));
+router.get("/users", db, asyncHandler(service.getData));
 
 // Update user personal
 router.put("/userPersonal/:uuid", db, asyncHandler(service.updatePersonal));
