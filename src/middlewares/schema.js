@@ -321,7 +321,6 @@ const userDao =
             lastname: "PhilFIDA",
             // region: "all",
             role: "user",
-            status: 0,
           },
           {
             username: "ugtrade",
@@ -341,6 +340,7 @@ const userDao =
             lastname: "PhilFIDA",
             // region: "all",
             role: "user",
+            status: 0,
           },
         ]);
       } catch (error) {
