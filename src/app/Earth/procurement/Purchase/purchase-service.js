@@ -84,7 +84,7 @@ class PurchaseService {
       // Send the items as a response
       return res.status(200).send({
         success: true,
-        pr_code: prRef_code,
+        ref_code: prRef_code,
         data: items,
       });
     } catch (err) {

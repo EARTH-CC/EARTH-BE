@@ -44,7 +44,7 @@ class PurchaseItemStore {
         .join("brand", "purchase_item.brand_id", "=", "brand.uuid")
         .join("supplier", "purchase_item.supplier_id", "=", "supplier.uuid")
         .join("category", "purchase_item.category_id", "=", "category.uuid")
-        .where("purchase_item.pr_code", "like", `%${prRef_code}%`);
+        .where("purchase_item.ref_code", "like", `%${prRef_code}%`);
 
       return results;
     } catch (error) {
@@ -52,6 +52,30 @@ class PurchaseItemStore {
       throw error;
     }
   }
+
+  async update(uuid, body) {
+  
+      await this.db(this.table)
+        .where(this.cols.id, uuid)
+        .update({
+          item_code: body.item_code,
+          price: body.price,
+          quantity: body.quantity,
+          product_id: body.product_id,
+          brand_id: body.brand_id,
+          supplier_id: body.supplier_id,
+          category_id: body.category_id,
+          description: body.description,
+        });
+  
+      const updatedRow = await this.db(this.table)
+        .where(this.cols.id, uuid)
+        .select("*")
+        .first();
+  
+      return updatedRow;
+    }
+
 }
 
 module.exports = PurchaseItemStore;

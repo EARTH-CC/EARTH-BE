@@ -1,4 +1,4 @@
-const Store = require("../PurchaseItem/purchaseItem-store");
+const Store = require("./purchaseItem-store");
 const Logs = require("../../../logs/logs-store");
 const { NotFoundError } = require("../../../../middlewares/errors");
 const moduleName = "PurchaseItem";
@@ -8,6 +8,33 @@ let currentCounter = 101;
 class PurchaseItemService {
   constructor(store) {}
 
+
+  async update(req, res, next) {
+    try {
+      const store = new Store(req.db);
+      const logs = new Logs(req.db);
+      const uuid = req.params.uuid;
+      const body = req.body;
+      //const userId = req.auth.id;
+      const result = await store.update(uuid, body);
+      if (result === 0) {
+        throw new NotFoundError("Data Not Found");
+      }
+
+      return res.status(200).send({
+        message: "Purchase Updated successfully",
+        success: true,
+        data: result,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+  
+  
+  
+  
+  
   
 }
 
