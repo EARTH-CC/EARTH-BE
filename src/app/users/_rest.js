@@ -31,6 +31,9 @@ router.get("/user/:uuid", db, asyncHandler(service.user));
 // Get all users
 router.get("/users", db, asyncHandler(service.getData));
 
+// Update user
+router.put("/user/:uuid", db, asyncHandler(service.updateUser));
+
 // Update user personal
 router.put("/userPersonal/:uuid", db, asyncHandler(service.updatePersonal));
 

@@ -22,6 +22,19 @@ class UserStore {
     });
   }
 
+  async updateUser(uuid, body, hash) {
+    return await this.db("users").where("UUID", uuid).update({
+      // username: body.username,
+      // password: hash,
+      firstname: body.firstname,
+      lastname: body.lastname,
+      // region: body.region,
+      role: body.role,
+      // refresh_token: body.refresh_token,
+      status: body.status,
+    });
+  }
+
   async updateUserPersonal(uuid, body, hash) {
     return await this.db("users").where("UUID", uuid).update({
       // username: body.username,
