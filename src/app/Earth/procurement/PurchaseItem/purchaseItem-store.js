@@ -74,7 +74,18 @@ class PurchaseItemStore {
         .first();
   
       return updatedRow;
-    }
+  }
+
+  async delete(uuid) {
+    const deletedRows = await this.db(this.table)
+      .where(this.cols.id, uuid)
+      .select("*")
+      .first();
+    await this.db(this.table).where(this.cols.id, uuid).del();
+    return deletedRows;
+  }
+
+  
 
 }
 

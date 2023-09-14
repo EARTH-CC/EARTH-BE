@@ -26,7 +26,5 @@ router.delete("/purchaseitem/delete/:uuid", db, asyncHandler(service.delete));
 // Get All Items
 router.get("/purchaseitem/getAllItems", db, asyncHandler(service.getAllItems));
 
-//Export
-// router.get("/project/export", db, asyncHandler(service.exportDataToExcel));
 
 module.exports = router;

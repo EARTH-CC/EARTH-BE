@@ -8,7 +8,7 @@ let currentCounter = 101;
 class PurchaseItemService {
   constructor(store) {}
 
-
+  //update an item in purchase request
   async update(req, res, next) {
     try {
       const store = new Store(req.db);
@@ -31,24 +31,47 @@ class PurchaseItemService {
     }
   }
   
-  
-  
-  
-  
+  //delete an item in purchase items
+  async delete(req, res, next) {
+    try {
+      const store = new Store(req.db);
+      const logs = new Logs(req.db);
+      const uuid = req.params.uuid;
+      const body = req.body;
+      //const userId = req.auth.id; // Get user ID using auth
+      const result = await store.delete(uuid);
+      if (result === 0) {
+        throw new NotFoundError("Data Not Found");
+      }
+      // logs.add({
+      //   uuid: userId,
+      //   module: moduleName,
+      //   action: `deleted a row in ${moduleName} table`,
+      //   data: result,
+      //   ...body,
+      // });
+      return res.status(202).send({
+        success: true,
+        message: "Purchase Deleted successfuly",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
   
 }
 
-function generatePrCode(data) {
-  const currentYear = new Date().getFullYear();
-  const paddedCounter = currentCounter.toString().padStart(4, "0");
+// function generatePrCode(data) {
+//   const currentYear = new Date().getFullYear();
+//   const paddedCounter = currentCounter.toString().padStart(4, "0");
 
-  currentCounter++;
+//   currentCounter++;
 
-  return `${data[0].product_id}${data[0].brand_id}${data[0].category_id}${
-    data[0].supplier_id
-  }${data[0].item_code
-    .substring(0, 2)
-    .toUpperCase()}${currentYear}${paddedCounter}`;
-}
+//   return `${data[0].product_id}${data[0].brand_id}${data[0].category_id}${
+//     data[0].supplier_id
+//   }${data[0].item_code
+//     .substring(0, 2)
+//     .toUpperCase()}${currentYear}${paddedCounter}`;
+// }
 
 module.exports = PurchaseItemService;
