@@ -30,7 +30,7 @@ class CategoryService {
     }
   }
 
-  // Get
+  // Get by UUID
   async get(req, res, next) {
     try {
       const store = new Store(req.db);
@@ -49,6 +49,7 @@ class CategoryService {
     }
   }
 
+  //Get All
   async getAllData(req, res, next) {
     try {
       let result = [];
@@ -83,13 +84,6 @@ class CategoryService {
       if (result === 0) {
         throw new NotFoundError("Data Not Found");
       }
-      // logs.add({
-      //   uuid: userId,
-      //   module: moduleName,
-      //   action: `updated a row in ${moduleName} table`,
-      //   data: result,
-      //   ...body
-      // });
       return res.status(200).send({
         success: true,
         data: result,
@@ -106,7 +100,6 @@ class CategoryService {
       const logs = new Logs(req.db);
       const uuid = req.params.uuid;
       const body = req.body;
-      //const userId = req.auth.id; // Get user ID using auth
       const result = await store.delete(uuid);
       if (result === 0) {
         throw new NotFoundError("Data Not Found");
@@ -120,58 +113,14 @@ class CategoryService {
       });
       return res.status(202).send({
         success: true,
-        message: "Purchase Deleted successfuly",
+        message: "Category Deleted successfuly",
       });
     } catch (err) {
       next(err);
     }
   }
 
-  // Get Graph Data
-  //   async getData(req, res, next) {
-  //     try {
-  //       const store = new Store(req.db);
-  //       const region = req.query.region;
-  //       const startDate = req.query.start;
-  //       const endDate = req.query.end;
-  //       const search = req.query.search;
-
-  //       let total = 0;
-  //       let table = [];
-  //       let lineGraph = [];
-  //       let barGraph = [];
-
-  //       const hasData = await store.getAll();
-
-  //       if (hasData.length > 0) {
-  //         lineGraph = await store.getLineGraph(
-  //           region,
-  //           startDate,
-  //           endDate,
-  //           search
-  //         );
-  //         barGraph = await store.getBarGraph(region, startDate, endDate, search);
-  //         table = await store.search(region, startDate, endDate, search);
-  //         total = await store.totalBeneficiary(
-  //           region,
-  //           startDate,
-  //           endDate,
-  //           search
-  //         );
-  //       } else {
-  //         table = await store.getAll();
-  //       }
-  //       return res.status(200).send({
-  //         success: true,
-  //         total: total,
-  //         lineGraph: lineGraph,
-  //         barGraph: barGraph,
-  //         table: table,
-  //       });
-  //     } catch (error) {
-  //       next(error);
-  //     }
-  //   }
+  
 }
 
 function generateReferenceCode(data) {

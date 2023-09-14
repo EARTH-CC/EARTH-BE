@@ -95,6 +95,7 @@ const userDao =
               .references("uuid") // Change this to "uuid" to match the primary key of "users" table
               .inTable("users")
               .onDelete("CASCADE");
+            
             table.index("item_code");
             table.index("price");
             table.index("name");
