@@ -51,6 +51,7 @@ async getMaxUUID() {
   async update(uuid, body) {
     // Perform the update operation
     await this.db(this.table).where(this.cols.id, uuid).update({
+      process_type: body.process_type,
       remarks: body.remarks,
       attention: body.attention,
     });
