@@ -259,7 +259,7 @@ class UserService {
       //const userId = req.auth.id; // Get user ID using auth
       // Hash the password
       // const hash = await bcrypt.hash(body.password, 10);
-      const result = store.updateUserPersonal(uuid, body);
+      const result = store.updateUser(uuid, body);
       if (result === 0) {
         throw new NotFoundError("User not found");
       }
