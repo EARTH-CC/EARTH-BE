@@ -22,6 +22,9 @@ class PurchaseService {
       const refCode = generateRefCode(data, counter);
       const prCode = generateProcessCode(prefix, counter);
       const totalAmount = getTotalAmount(data.items);
+      const supplierByID = await store.getSupplierByID(
+        data.items[0].supplier_id
+      );
       await itemStore.add(data.items, prCode);
       await store.add({
         ...data,
@@ -34,7 +37,11 @@ class PurchaseService {
       const response = {
         message: "Purchase Request added successfully",
         module: "Purchase Request",
-        data: data,
+        data: {
+          company_name: supplierByID[0].name,
+          address: supplierByID[0].address,
+          ...data,
+        },
       };
       res.status(201).json(response); // Send the response back to the client
     } catch (err) {

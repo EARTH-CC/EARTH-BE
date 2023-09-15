@@ -1,21 +1,36 @@
 const { query } = require("express");
 const purchaseTableConfig = require("../../../../configuration/procurement/purchaseTableConfig");
+const supplierTableConfig = require("../../../../configuration/procurement/supplierTableConfig");
 
 class PurchaseStore {
   constructor(db) {
     this.db = db;
     this.table = purchaseTableConfig.tableName;
+    this.supplierTable = supplierTableConfig.tableName;
     this.cols = purchaseTableConfig.columnNames;
   }
 
   async add(data) {
     return new Promise(async (resolve, reject) => {
       try {
+        //eto pang retrieve
+        const supplierId = data.items[0].supplier_id;
+        const supplier = await this.db("supplier")
+          .select("name", "address")
+          .where("uuid", supplierId)
+          .first();
+
+        //eto pang check kung nag eexist si supplier based sa supplier_id
+        if (!supplier) {
+          reject({ message: "Supplier not found." });
+          return;
+        }
+
         const result = await this.db(this.table).insert({
           ref_code: data.ref_code,
           pr_code: data.pr_code,
-          company_name: data.company_name,
-          address: data.address,
+          company_name: supplier.name,
+          address: supplier.address,
           item_count: data.item_count,
           total_amount: data.total_amount,
           remarks: data.remarks,
@@ -29,17 +44,27 @@ class PurchaseStore {
     });
   }
 
-async getMaxUUID() {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const result = await this.db(this.table).max('uuid as max_uuid').first();
-      const maxUUID = result.max_uuid || 0; // Default to 0 if no result is found
-      resolve(maxUUID + 1);
-    } catch (error) {
-      reject(error);
-    }
-  });
-}
+  async getMaxUUID() {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const result = await this.db(this.table)
+          .max("uuid as max_uuid")
+          .first();
+        const maxUUID = result.max_uuid || 0; // Default to 0 if no result is found
+        resolve(maxUUID + 1);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  async getSupplierByID(suppID) {
+    console.log(suppID);
+    const results = await this.db(this.supplierTable)
+      .select()
+      .where(this.cols.id, suppID);
+    return results;
+  }
 
   async getAll(processType) {
     const results = await this.db(this.table)
