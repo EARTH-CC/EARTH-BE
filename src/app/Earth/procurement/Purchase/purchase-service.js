@@ -118,7 +118,7 @@ class PurchaseService {
     }
   }
 
-  // Update
+  // Update Order
   async update(req, res, next) {
     try {
       const store = new Store(req.db);
@@ -126,11 +126,28 @@ class PurchaseService {
       const uuid = req.params.uuid;
       const body = req.body;
       //const userId = req.auth.id;
-      const result = await store.update(uuid, body);
+      const poCode = null;
+      const tfCode = null;
+      const poDate = null;
+      const tfDate = null;
+      if (body.processType === "order") {
+        poCode = generateProcessCode("MCW-PO", counter);
+        poDate = currentDate;
+      }
+      if (body.processType === "transmittal") {
+        tfCode = generateProcessCode("MWC - TF", counter);
+        tfDate = currentDate;
+      }
+      const result = await store.update(uuid, {
+        ...body,
+        po_code: poCode,
+        order_date: poDate,
+        tf_code: tfCode,
+        transmit_date: tfDate,
+      });
       if (result === 0) {
         throw new NotFoundError("Data Not Found");
       }
-
       return res.status(200).send({
         message: "Purchase Updated successfully",
         success: true,

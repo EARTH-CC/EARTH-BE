@@ -76,9 +76,24 @@ class PurchaseStore {
   async update(uuid, body) {
     // Perform the update operation
     await this.db(this.table).where(this.cols.id, uuid).update({
-      process_type: body.process_type,
-      remarks: body.remarks,
-      attention: body.attention,
+      // Purchase Request
+      process_type: body?.process_type,
+      remarks: body?.remarks,
+      attention: body?.attention,
+      // Purchase Order
+      po_code: body?.po_code,
+      order_date: body?.order_date,
+      or_code: body?.or_code,
+      order_due_date: body?.order_due_date,
+      terms_of_agreement: body?.terms_of_agreement,
+      // Transmittal
+      tf_code: body?.tf_code,
+      purpose: body?.purpose,
+      billing_date: body?.billing_date,
+      prepared_date: body?.prepared_date,
+      received_date: body?.received_date,
+      prepared_by: body?.prepared_by,
+      received_by: body?.received_by,
     });
 
     // Fetch the updated rows

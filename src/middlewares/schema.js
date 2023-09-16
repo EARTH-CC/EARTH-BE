@@ -205,8 +205,8 @@ const userDao =
             table.string("remarks").nullable(); //manual
             table.date("request_date").nullable();
             table.date("order_date").nullable();
+            table.date("order_due_date").nullable();
             table.date("transmit_date").nullable();
-            table.date("due_date").nullable();
             table.date("billing_date").nullable();
             table.date("received_date").nullable();
             table.date("prepared_date").nullable();
