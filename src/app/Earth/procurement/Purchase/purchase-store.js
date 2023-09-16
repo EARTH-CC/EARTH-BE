@@ -59,7 +59,6 @@ class PurchaseStore {
   }
 
   async getSupplierByID(suppID) {
-    console.log(suppID);
     const results = await this.db(this.supplierTable)
       .select()
       .where(this.cols.id, suppID);
