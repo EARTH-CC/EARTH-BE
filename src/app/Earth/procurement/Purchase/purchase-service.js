@@ -125,16 +125,17 @@ class PurchaseService {
       const logs = new Logs(req.db);
       const uuid = req.params.uuid;
       const body = req.body;
+      const counter = await store.getMaxUUID();
       //const userId = req.auth.id;
-      const poCode = null;
-      const tfCode = null;
-      const poDate = null;
-      const tfDate = null;
-      if (body.processType === "order") {
+      let poCode = null;
+      let tfCode = null;
+      let poDate = null;
+      let tfDate = null;
+      if (body.process_type === "order") {
         poCode = generateProcessCode("MCW-PO", counter);
         poDate = currentDate;
       }
-      if (body.processType === "transmittal") {
+      if (body.process_type === "transmittal") {
         tfCode = generateProcessCode("MWC - TF", counter);
         tfDate = currentDate;
       }

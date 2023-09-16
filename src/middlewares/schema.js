@@ -188,9 +188,9 @@ const userDao =
             table.string("tf_code").nullable();
             table.string("or_code").nullable();
             table.string("process_type").nullable().defaultTo("request");
-            table.string("pr_status").notNullable().defaultTo(1);
-            table.string("po_status").notNullable().defaultTo(1);
-            table.string("tf_status").notNullable().defaultTo(1);
+            table.string("pr_status").notNullable().defaultTo("pending");
+            table.string("po_status").notNullable().defaultTo("pending");
+            table.string("tf_status").notNullable().defaultTo("pending");
             table.string("company_name").notNullable().defaultTo("Earth");
             table
               .string("address")
