@@ -42,34 +42,58 @@ class ProductStore {
     return products;
   }
 
-  async getAll() {
-    const results = await this.db(this.table)
-      .select(
-        "product.uuid",
-        "product.name",
-        "product.price",
-        "product.item_code",
-        "product.description",
-        "product.brand_id",
-        "product.category_id",
-        "product.supplier_id",
-        "product.created_at",
-        "product.updated_at",
-        "product.added_by",
-        "supplier.name as supplier_company",
-        "supplier.address as supplier_address",
-        "brand.name as brand_name",
-        "category.name as category_name",
-        "supplier.name as supplier_name",
-        "supplier.phone_no",
-        "supplier.mobile_no",
-        "supplier.tin_no"
-      )
-      .join("brand", "product.brand_id", "=", "brand.uuid")
-      .join("category", "product.category_id", "=", "category.uuid")
-      .join("supplier", "product.supplier_id", "=", "supplier.uuid");
-
-    return results;
+  async getAll(category, brand, supplier, minPrice, maxPrice) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const result = await this.db(this.table)
+          .select(
+            "product.uuid",
+            "product.name",
+            "product.price",
+            "product.item_code",
+            "product.description",
+            "product.brand_id",
+            "product.category_id",
+            "product.supplier_id",
+            "product.created_at",
+            "product.updated_at",
+            "product.added_by",
+            "supplier.name as supplier_company",
+            "supplier.address as supplier_address",
+            "brand.name as brand_name",
+            "category.name as category_name",
+            "supplier.name as supplier_name",
+            "supplier.phone_no",
+            "supplier.mobile_no",
+            "supplier.tin_no"
+          )
+          .join("brand", "product.brand_id", "=", "brand.uuid")
+          .join("category", "product.category_id", "=", "category.uuid")
+          .join("supplier", "product.supplier_id", "=", "supplier.uuid")
+          .orderBy([{ column: this.cols.name, order: "asc" }])
+          .where((builder) => {
+            if (category) {
+              builder.where(this.cols.categoryId, category);
+              console.log("category");
+            }
+            if (brand) {
+              builder.where(this.cols.brandId, brand);
+              console.log("brand");
+            }
+            if (supplier) {
+              builder.where(this.cols.supplierId, supplier);
+              console.log(supplier);
+            }
+            if (minPrice && maxPrice) {
+              builder.whereBetween(this.cols.price, [minPrice, maxPrice]);
+              console.log("price range");
+            }
+          });
+        resolve(result);
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
   async update(uuid, body) {

@@ -38,17 +38,17 @@ class ProductService {
     try {
       const { startRange, endRange } = req.query;
       const store = new Store(req.db);
-  
+
       const clampedStartRange = Math.min(
         Math.max(parseInt(startRange, 10), 0),
         999999
       );
-  
+
       const clampedEndRange = Math.min(
         Math.max(parseInt(endRange, 10), 0),
         999999
       );
-  
+
       let priceRange;
       if (!isNaN(clampedStartRange) && !isNaN(clampedEndRange)) {
         priceRange = await store.getPrice(clampedStartRange, clampedEndRange);
@@ -86,9 +86,16 @@ class ProductService {
   //Get All Data
   async getAllData(req, res, next) {
     try {
+      const { category, brand, supplier, minPrice, maxPrice } = req.query;
       let result = [];
       const store = new Store(req.db);
-      result = await store.getAll();
+      result = await store.getAll(
+        category,
+        brand,
+        supplier,
+        minPrice,
+        maxPrice
+      );
 
       if (!result) {
         result = [];
@@ -214,7 +221,7 @@ function generateReferenceCode(data) {
   const paddedCounter = currentCounter.toString().padStart(4, "0");
 
   currentCounter++;
-  
+
   return `${data.brand_id}${data.category_id}${data.supplier_id}${data.name
     .substring(0, 2)
     .toUpperCase()}${currentYear}${paddedCounter}`;
