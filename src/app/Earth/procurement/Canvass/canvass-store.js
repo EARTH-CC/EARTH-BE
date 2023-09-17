@@ -9,13 +9,28 @@ class CanvassStore {
   }
 
   async add(data) {
-    return await this.db(this.table).insert({
-      name: data.name,
-      price: data.price,
-      item_code: data.item_code,
-      quantity: data.quantity,
-      description: data.description,
-    });
+    // Check if an item with the same item_code already exists
+    const existing = await this.db(this.table)
+      .where("item_code", data.item_code)
+      .first();
+
+    if (existing) {
+      // If it exists, update the existing item's quantity by adding 1
+      const result = await this.db(this.table)
+        .where("item_code", data.item_code)
+        .increment("quantity", 1);
+      return result;
+    } else {
+      // If it doesn't exist, insert a new item
+      const result = await this.db(this.table).insert({
+        name: data.name,
+        price: data.price,
+        item_code: data.item_code,
+        quantity: data.quantity,
+        description: data.description,
+      });
+      return result;
+    }
   }
 
   async getAllCart() {

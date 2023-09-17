@@ -31,8 +31,6 @@ const userDao =
             table.increments("uuid").primary();
             table.string("name").notNullable();
             table.timestamps(true, true);
-            table.integer("status").defaultTo(1).notNullable();
-
             table.index("name");
           })
 
@@ -40,8 +38,6 @@ const userDao =
             table.increments("uuid").primary();
             table.string("name").notNullable();
             table.timestamps(true, true);
-            table.integer("status").defaultTo(1).notNullable();
-
             table.index("name");
           })
 
@@ -53,8 +49,6 @@ const userDao =
             table.string("mobile_no").notNullable();
             table.string("tin_no").notNullable();
             table.timestamps(true, true);
-            table.integer("status").defaultTo(1).notNullable();
-
             table.index("name");
           })
 
@@ -84,9 +78,7 @@ const userDao =
               .references("uuid") // Change this to "uuid" to match the primary key of "users" table
               .inTable("supplier")
               .onDelete("CASCADE");
-
             table.string("description").nullable();
-            table.integer("status").defaultTo(1).notNullable();
             table.timestamps(true, true);
             table
               .integer("added_by")
@@ -95,7 +87,6 @@ const userDao =
               .references("uuid") // Change this to "uuid" to match the primary key of "users" table
               .inTable("users")
               .onDelete("CASCADE");
-            
             table.index("item_code");
             table.index("price");
             table.index("name");
@@ -125,7 +116,6 @@ const userDao =
             table.integer("quantity").defaultTo(1).notNullable();
             table.double("price").notNullable();
             table.string("description").nullable();
-            table.integer("status").defaultTo(1).notNullable();
             table.timestamps(true, true);
             table
               .foreign("item_code")
@@ -170,7 +160,6 @@ const userDao =
               .onDelete("RESTRICT");
             table.string("description").nullable();
             table.timestamps(true, true);
-
             table.foreign("price").references("price").inTable("product");
             table
               .foreign("item_code")
@@ -208,11 +197,11 @@ const userDao =
             table.date("order_due_date").nullable();
             table.date("transmit_date").nullable();
             table.date("billing_date").nullable();
-            table.date("received_date").nullable();
             table.date("prepared_date").nullable();
+            table.date("received_date").nullable();
             table.string("prepared_by").nullable(); //manual
-            table.string("noted_by").nullable(); //manual
             table.string("received_by").nullable(); //manual
+            table.string("noted_by").nullable(); //manual
             table.timestamps(true, true);
           })
 

@@ -25,15 +25,23 @@ class PurchaseService {
       const supplierByID = await store.getSupplierByID(
         data.items[0].supplier_id
       );
+
+      // Calculate the total quantity of items
+      const totalQuantity = data.items.reduce(
+        (accumulator, currentItem) => accumulator + currentItem.quantity,
+        0
+      );
+
       await itemStore.add(data.items, prCode);
       await store.add({
         ...data,
-        item_count: data.items.length,
+        item_count: totalQuantity, // Use the total quantity here
         ref_code: refCode,
         pr_code: prCode,
         total_amount: totalAmount,
         request_date: currentDate,
       });
+
       const response = {
         message: "Purchase Request added successfully",
         module: "Purchase Request",
@@ -71,27 +79,29 @@ class PurchaseService {
   //eto yung sa get all items
   async getAllItems(req, res, next) {
     try {
-      const { prRef_code } = req.query; // Use prRef_code if it matches your route definition
+      const { ref_code } = req.query; // Use prRef_code if it matches your route definition
 
-      if (!prRef_code) {
+      if (!ref_code) {
         // Handle the case where prRef_code is missing in the request
-        return res.status(400).json({ error: "prRef_code is required" });
+        return res.status(400).json({ error: "ref code is required" });
       }
 
       const itemStore = new ItemStore(req.db);
       // const store = new Store(req.db);
       // const request = await store.getAll();
-      const items = await itemStore.getAll(prRef_code);
+      const items = await itemStore.getAll(ref_code);
 
       if (items.length === 0) {
         // Handle the case where no items were found
-        return res.status(404).json({ error: "No items found for prRef_code" });
+        return res
+          .status(404)
+          .json({ error: `No items found for ${ref_code}` });
       }
 
       // Send the items as a response
       return res.status(200).send({
         success: true,
-        ref_code: prRef_code,
+        ref_code: ref_code,
         data: items,
       });
     } catch (err) {
@@ -136,7 +146,7 @@ class PurchaseService {
         poDate = currentDate;
       }
       if (body.process_type === "transmittal") {
-        tfCode = generateProcessCode("MWC - TF", counter);
+        tfCode = generateProcessCode("MWC-TF", counter);
         tfDate = currentDate;
       }
       const result = await store.update(uuid, {
