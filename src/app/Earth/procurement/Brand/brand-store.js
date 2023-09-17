@@ -50,7 +50,6 @@ class BrandStore {
     // Perform the update operation
     await this.db(this.table).where(this.cols.id, uuid).update({
       name: body.name,
-      status: body.status,
     });
 
     // Fetch the updated rows

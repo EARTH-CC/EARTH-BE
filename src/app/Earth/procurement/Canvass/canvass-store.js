@@ -51,8 +51,7 @@ class CanvassStore {
         .from("canvass")
         .join("product", "product.item_code", "=", "canvass.item_code")
         .join("brand", "product.brand_id", "=", "brand.uuid")
-        .join("supplier", "product.supplier_id", "=", "supplier.uuid")
-        .where("canvass.status", "=", 1);
+        .join("supplier", "product.supplier_id", "=", "supplier.uuid");
 
       return results;
     } catch (error) {
@@ -67,7 +66,6 @@ class CanvassStore {
       const result = await this.db(this.table)
         .select(this.db.raw("SUM(price * quantity) as total_price"))
         .count(`${this.cols.id} as items`)
-        .where("status", "=", 1)
         .first();
 
       if (result !== undefined && result !== null) {
@@ -115,7 +113,6 @@ class CanvassStore {
         "product.price",
         "product.item_code",
         "product.description",
-        "product.status",
         "product.created_at",
         "product.updated_at",
         "product.added_by",

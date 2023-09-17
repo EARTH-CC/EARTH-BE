@@ -53,7 +53,6 @@ class CategoryStore {
     // Perform the update operation
     await this.db(this.table).where(this.cols.id, uuid).update({
         name: body.item_name,
-        status: body.status,
     });
 
     // Fetch the updated rows

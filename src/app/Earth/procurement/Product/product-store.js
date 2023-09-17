@@ -50,7 +50,6 @@ class ProductStore {
         "product.price",
         "product.item_code",
         "product.description",
-        "product.status",
         "product.brand_id",
         "product.category_id",
         "product.supplier_id",
@@ -83,7 +82,6 @@ class ProductStore {
       name: body.name,
       description: body.description,
       added_by: body.added_by,
-      status: body.status,
     });
 
     // Fetch the updated rows

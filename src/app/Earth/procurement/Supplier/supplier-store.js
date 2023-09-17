@@ -60,7 +60,6 @@ class SupplierStore {
         address: body.address,
         phone_no: body.phone_no,
         mobile_no: body.mobile_no,
-        status: body.status
     });
 
     // Fetch the updated rows
